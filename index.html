@@ -5,1242 +5,644 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>@zc</title>
 
-  <!-- favicon (placeholder provided as head.png) -->
-  <link rel="icon" type="image/png" href="head.png" />
+  <!-- favicon placeholder -->
+  <link rel="icon" href="head.png" type="image/png" />
 
-  <!-- Inter font for modern typography -->
+  <!-- Inter font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-  <!--
-    All CSS is included in this single file inside a <style> tag below.
-    No inline styles. No external frameworks.
-    This is intentionally verbose with comments and spacing to make editing easier.
-  -->
   <style>
-    /* ==========================================================================
-       Base / Reset
-       ========================================================================== */
+    /* ========== CONFIG (change these CSS variables) ========== */
+    :root{
+      /* Overall look */
+      --bg-image: url(''); /* put a background image URL here or leave empty for solid color */
+      --bg-color: #000;            /* fallback background */
+      --page-accent: rgba(255,255,255,0.06); /* subtle card background */
+      --card-bg-opacity: 0.09;     /* opacity multiplier for card (0-1) */
+      --card-bg-color: 20,20,20;   /* rgb base for card */
+      --card-border-color: 255,255,255; /* rgb base for border */
+      --card-border-width: 1.5px;  /* border thickness */
+      --card-border-opacity: 0.06; /* border opacity */
+      --accent-color: #e9e9ff;     /* primary accent for name / highlights */
+      --muted-color: rgba(255,255,255,0.5);
+      --bio-color: rgba(255,255,255,0.65);
+      --glass-blur: 6px;
 
-    /* Use box-sizing: border-box for predictable sizing */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
+      /* sizing */
+      --card-radius: 18px;
+      --container-max-w: 880px;
+      --profile-padding: 22px;
+
+      /* music player */
+      --player-height: 78px;
     }
 
-    /* Remove default margins and provide base font settings */
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background-color: #050505; /* deep black tone base */
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      color: #efe9d6; /* soft cream text */
-      line-height: 1.35;
-      scroll-behavior: smooth; /* smooth scrolling between sections */
-    }
-
-    /* make images responsive by default */
-    img {
-      display: inline-block;
-      max-width: 100%;
-      height: auto;
-    }
-
-    /* Links default */
-    a {
-      color: inherit;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    /* Utility classes (small set for layout flexibility) */
-    .container {
-      width: min(1100px, 92%);
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .sr-only {
-      position: absolute !important;
-      height: 1px; width: 1px;
-      overflow: hidden;
-      clip: rect(1px, 1px, 1px, 1px);
-      white-space: nowrap;
-    }
-
-    /* ==========================================================================
-       Background gradient / pattern
-       ========================================================================== */
-
-    /* A subtle radial gradient + vignette for depth - feels like the reference */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(1200px 400px at 50% 30%, rgba(255,238,210,0.02), transparent 20%),
-        radial-gradient(600px 220px at 20% 70%, rgba(255,238,210,0.01), transparent 20%),
-        linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.2) 60%);
-      mix-blend-mode: screen;
-      opacity: 1;
-    }
-
-    /* Subtle noise texture overlay using CSS generated data-url would be heavy;
-       instead we use a soft repeated linear-gradient to simulate grain lines */
-    .grain {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image: linear-gradient(transparent 49%, rgba(0,0,0,0.02) 50%);
-      background-size: 100% 4px;
-      opacity: 0.35;
-      mix-blend-mode: overlay;
-    }
-
-    /* ==========================================================================
-       Layout: header, main, footer
-       ========================================================================== */
-
-    header {
-      position: relative;
-      z-index: 10;
-      padding: 56px 0 20px;
-    }
-
-    main {
-      position: relative;
-      z-index: 10;
-      padding-bottom: 60px;
-    }
-
-    footer {
-      position: relative;
-      z-index: 10;
-      padding: 40px 0 88px;
-      text-align: center;
-      color: rgba(239,233,214,0.6);
-      font-size: 13px;
-    }
-
-    /* ==========================================================================
-       Card Wrapper (centered, rounded, minimal)
-       ========================================================================== */
-
-    .card {
-      margin-top: 36px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));
-      border-radius: 28px;
-      padding: 28px;
-      box-shadow:
-        0 12px 30px rgba(0,0,0,0.6),
-        inset 0 1px 0 rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.03);
-      backdrop-filter: blur(6px);
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 22px;
-      align-items: center;
-    }
-
-    /* Make the card feel centered with left alignment similar to reference */
-    .hero {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    /* ==========================================================================
-       Profile Picture
-       ========================================================================== */
-
-    .pfp {
-      width: 120px;
-      height: 120px;
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-      flex-shrink: 0;
-      box-shadow:
-        0 8px 30px rgba(0,0,0,0.6),
-        0 1px 0 rgba(255,255,255,0.02) inset;
-      border: 2px solid rgba(255,255,255,0.03);
-    }
-
-    .pfp img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transform-origin: center;
-      transition: transform 260ms cubic-bezier(.2,.9,.2,1);
-    }
-
-    .pfp:hover img {
-      transform: scale(1.05) rotate(-1deg);
-    }
-
-    /* small badge on the pfp corner for "staff" or role accent */
-    .pfp-badge {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(10,10,10,0.7);
-      padding: 6px 8px;
-      border-radius: 999px;
-      font-size: 12px;
-      color: #efe9d6;
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.02);
-    }
-
-    .pfp-badge svg {
-      width: 14px;
-      height: 14px;
-      opacity: 0.9;
-    }
-
-    /* ==========================================================================
-       Username and meta
-       ========================================================================== */
-
-    .meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .username {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #f6f0d8;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* small role icon */
-    .username .role {
-      background: linear-gradient(180deg,#cfc49f,#bfae79);
-      color: #111;
-      font-weight: 700;
-      padding: 6px 8px;
-      border-radius: 999px;
-      font-size: 12px;
-      display: inline-flex;
-      gap:6px;
-      align-items:center;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.5);
-    }
-
-    .about {
-      color: rgba(239,233,214,0.82);
-      font-weight: 400;
-      font-size: 14.5px;
-      max-width: 68ch;
-      margin-top: 6px;
-    }
-
-    .joined {
-      color: rgba(239,233,214,0.5);
-      font-size: 12px;
-      margin-top: 4px;
-    }
-
-    /* small divider line */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-      margin: 20px 0;
-    }
-
-    /* ==========================================================================
-       Socials section
-       ========================================================================== */
-
-    .socials-grid {
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    /* individual social icon wrapper */
-    .social {
-      width: 54px;
-      height: 54px;
-      border-radius: 12px;
-      overflow: visible;
-      display: inline-grid;
-      place-items: center;
-      background: rgba(255,255,255,0.012);
-      transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms;
-      position: relative;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.02);
-      cursor: pointer;
-    }
-
-    .social img {
-      width: 36px;
-      height: 36px;
-      object-fit: contain;
-      filter: grayscale(0.03) contrast(0.9);
-      transition: transform 200ms, filter 300ms;
-    }
-
-    .social:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 18px 34px rgba(0,0,0,0.7);
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));
-    }
-
-    .social:hover img {
-      transform: scale(1.06);
-      filter: grayscale(0) saturate(1.1);
-    }
-
-    /* tooltip for socials */
-    .social .tooltip {
-      position: absolute;
-      bottom: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%) translateY(6px);
-      background: rgba(20,20,20,0.9);
-      color: #f6f0d8;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      white-space: nowrap;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 200ms cubic-bezier(.2,.9,.2,1);
-      transform-origin: center;
-      border: 1px solid rgba(255,255,255,0.02);
-      backdrop-filter: blur(6px);
-      z-index: 20;
-    }
-
-    .social:hover .tooltip {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* small arrow under tooltip */
-    .social .tooltip::after {
-      content: "";
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 8px;
-      background: rgba(20,20,20,0.9);
-      border-left: 1px solid rgba(255,255,255,0.02);
-      border-top: 1px solid rgba(255,255,255,0.02);
-      transform: translateX(-50%) rotate(45deg) translateY(-2px);
-      z-index: -1;
-    }
-
-    /* ==========================================================================
-       Badges section
-       ========================================================================== */
-
-    .badges {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      width: 56px;
-      height: 56px;
-      display: inline-grid;
-      place-items: center;
-      border-radius: 12px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.01);
-      border: 1px solid rgba(255,255,255,0.02);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-      transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms, filter 220ms;
-      position: relative;
-      cursor: default;
-    }
-
-    .badge img {
-      width: 38px;
-      height: 38px;
-      object-fit: contain;
-      filter: saturate(0.6) contrast(1);
-      transition: transform 200ms, filter 220ms;
-    }
-
-    .badge:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 26px 64px rgba(0,0,0,0.7);
-      filter: saturate(1.06);
-    }
-
-    .badge:hover img {
-      transform: scale(1.08);
-      filter: saturate(1.1) contrast(1.05);
-    }
-
-    /* badge tooltip (fade-in) */
-    .badge .tooltip {
-      position: absolute;
-      top: calc(100% + 10px);
-      left: 50%;
-      transform: translateX(-50%) translateY(-6px);
-      background: rgba(16,16,16,0.95);
-      color: #f6f0d8;
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      white-space: nowrap;
-      box-shadow: 0 12px 26px rgba(0,0,0,0.6);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 220ms ease, transform 220ms cubic-bezier(.2,.9,.2,1);
-      transform-origin: center;
-      border: 1px solid rgba(255,255,255,0.02);
-      z-index: 30;
-    }
-
-    .badge:hover .tooltip {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ==========================================================================
-       Action Links (call-to-action / other links)
-       ========================================================================== */
-
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 12px;
-      margin-top: 12px;
-      align-items: center;
-    }
-
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.008));
-      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.02);
-      transition: transform 200ms, box-shadow 200ms, background 200ms;
-      color: #efe9d6;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-    }
-
-    .cta:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 24px 48px rgba(0,0,0,0.7);
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    }
-
-    /* Icons inside CTA */
-    .cta svg {
-      width: 16px;
-      height: 16px;
-      opacity: 0.9;
-    }
-
-    /* ==========================================================================
-       Music Player (placed below main content)
-       ========================================================================== */
-
-    /* Player wrapper - visually separated card */
-    .player {
-      margin-top: 36px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.008));
-      padding: 18px;
-      border-radius: 14px;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.65);
-      border: 1px solid rgba(255,255,255,0.02);
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    .player .meta {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      min-width: 260px;
-    }
-
-    .player .album-art {
-      width: 74px;
-      height: 74px;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 8px 26px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.02);
-      flex-shrink: 0;
-    }
-
-    .player .song-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .player .song-title {
-      font-weight: 700;
-      font-size: 16px;
+    /* ========== PAGE BASE ========== */
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background: var(--bg-color) center/cover no-repeat fixed;
       color: #fff;
     }
 
-    .player .song-artist {
-      font-weight: 500;
-      font-size: 13px;
-      color: rgba(239,233,214,0.8);
+    /* background image fallback */
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      background-color: rgba(0,0,0,0.85);
+      z-index:-2;
+    }
+    /* optional image overlay (set --bg-image to an url to use) */
+    body::after{
+      content:'';
+      position:fixed;
+      inset:0;
+      background-image: var(--bg-image);
+      background-size:cover;
+      background-position:center;
+      opacity:0.14;
+      filter: blur(1px) saturate(0.8);
+      z-index:-3;
+      pointer-events:none;
     }
 
-    /* Player controls (center area) */
-    .controls {
-      flex: 1 1 420px;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
+    /* central layout */
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:48px 20px;
     }
 
-    .controls .buttons {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
+    .card-column{
+      width:100%;
+      max-width:var(--container-max-w);
+      display:flex;
+      gap:22px;
+      flex-direction:column;
+      align-items:flex-start;
     }
 
-    .btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      display: inline-grid;
-      place-items: center;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008));
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.02);
-      transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms;
-      cursor: pointer;
+    /* ========== PROFILE CARD ========== */
+    .profile-card{
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      padding:var(--profile-padding);
+      border-radius:var(--card-radius);
+      background: linear-gradient(180deg,
+        rgba(var(--card-bg-color), calc(var(--card-bg-opacity))),
+        rgba(var(--card-bg-color), calc(var(--card-bg-opacity) + 0.02))
+      );
+      backdrop-filter: blur(var(--glass-blur));
+      box-shadow: 0 6px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: var(--card-border-width) solid rgba(var(--card-border-color), var(--card-border-opacity));
     }
 
-    .btn:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 26px 56px rgba(0,0,0,0.7);
+    .pfp-wrap{
+      width:92px;
+      flex:0 0 92px;
+      position:relative;
+      border-radius:14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .pfp-wrap img{
+      display:block;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transform:translateZ(0);
     }
 
-    .btn svg {
-      width: 22px;
-      height: 22px;
-      fill: #efe9d6;
+    .profile-meta{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:0;
+      flex:1 1 auto;
     }
 
-    /* Progress bar area with time display */
-    .progressWrap {
-      width: 100%;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-      padding-top: 6px;
-      padding-left: 12px;
-      padding-right: 12px;
+    .meta-top{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
     }
 
-    .time {
-      width: 46px;
-      font-size: 12px;
-      color: rgba(239,233,214,0.7);
-      text-align: center;
+    .name-and-badges{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+      flex-wrap:wrap;
     }
 
-    /* Custom progress slider */
-    input[type="range"].progress {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(90deg,#6f5d2a 0%, rgba(255,255,255,0.08) 100%);
-      outline: none;
-      cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    .display-name{
+      font-weight:700;
+      font-size:32px;
+      color:var(--accent-color);
+      letter-spacing: -0.02em;
+      white-space:nowrap;
+      margin:0;
+      padding:0;
     }
 
-    input[type="range"].progress::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #efe9d6;
-      border: 2px solid rgba(0,0,0,0.45);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
-      transition: transform 120ms cubic-bezier(.2,.9,.2,1);
+    /* Badges container - auto width based on how many badges */
+    .badges{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      padding:6px;
+      background:rgba(255,255,255,0.02);
+      border-radius:999px;
+      height:36px;
+      flex:0 0 auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.35);
     }
 
-    input[type="range"].progress::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #efe9d6;
-      border: 2px solid rgba(0,0,0,0.45);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+    .badge{
+      width:28px;
+      height:28px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:8px;
+      overflow:hidden;
+      position:relative;
+      cursor:default;
+      transition:transform .18s ease, box-shadow .18s ease;
+      border:1px solid rgba(255,255,255,0.03);
+      background:rgba(0,0,0,0.2);
+    }
+    .badge img{
+      width:18px;
+      height:18px;
+      object-fit:contain;
+      opacity:0.95;
+      display:block;
+    }
+    .badge:hover{ transform:translateY(-3px) scale(1.05); box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+
+    /* Tooltip system - using data-tooltip attr */
+    .badge[data-tooltip]:hover::after,
+    .social[data-tooltip]:hover::after{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
     }
 
-    input[type="range"].progress:active::-webkit-slider-thumb {
-      transform: scale(1.06);
+    .badge::after,
+    .social::after{
+      content:attr(data-tooltip);
+      position:absolute;
+      top:-44px;
+      left:50%;
+      transform:translate(-50%,8px) scale(.98);
+      background:rgba(0,0,0,0.75);
+      color: #fff;
+      font-size:12px;
+      padding:6px 9px;
+      border-radius:8px;
+      white-space:nowrap;
+      opacity:0;
+      transition:all .18s cubic-bezier(.2,.9,.28,1);
+      pointer-events:none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      z-index:5;
     }
 
-    /* Volume control (small range) */
-    .volumeWrap {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      min-width: 120px;
-      justify-content: flex-end;
+    .badge::before,
+    .social::before{
+      content:'';
+      position:absolute;
+      top:-18px;
+      left:50%;
+      transform:translateX(-50%);
+      border:7px solid transparent;
+      border-top-color:rgba(0,0,0,0.75);
+      opacity:0;
+      transition:all .18s ease;
+      z-index:5;
+    }
+    .badge[data-tooltip]:hover::before,
+    .social[data-tooltip]:hover::before{
+      opacity:1;
+      transform:translateX(-50%) translateY(0);
     }
 
-    input[type="range"].volume {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 120px;
-      height: 4px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(239,233,214,0.5) 0%, rgba(239,233,214,0.08) 100%);
-      cursor: pointer;
+    /* small bio next to profile pic (under the name) */
+    .bio{
+      color:var(--bio-color);
+      font-size:13.5px;
+      line-height:1.25;
+      max-width:680px;
+      margin-top:2px;
+      opacity:0.95;
     }
 
-    input[type="range"].volume::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #efe9d6;
-      border: 2px solid rgba(0,0,0,0.45);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+    /* right side actions (optional) */
+    .meta-actions{
+      margin-left:auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
     }
 
-    input[type="range"].volume::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #efe9d6;
-      border: 2px solid rgba(0,0,0,0.45);
+    /* ========== SOCIAL ICONS ========== */
+    .socials{
+      margin-top:14px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+    .social{
+      width:44px;
+      height:44px;
+      border-radius:10px;
+      display:inline-grid;
+      place-items:center;
+      cursor:pointer;
+      transition:transform .18s cubic-bezier(.2,.9,.28,1), box-shadow .18s ease;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      position:relative;
+      overflow:visible;
+    }
+    .social img{ width:20px; height:20px; object-fit:contain; display:block; }
+    .social:hover { transform: scale(1.12) translateY(-4px); box-shadow:0 10px 30px rgba(0,0,0,0.5); }
+
+    /* ========== MUSIC PLAYER ========== */
+    .player{
+      margin-top:18px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      width:100%;
+      padding:12px 16px;
+      border-radius:12px;
+      height:var(--player-height);
+      box-sizing:border-box;
+
+      /* use same color base as profile card */
+      background: linear-gradient(180deg,
+        rgba(var(--card-bg-color), calc(var(--card-bg-opacity) + 0.02)),
+        rgba(var(--card-bg-color), calc(var(--card-bg-opacity)))
+      );
+      border: var(--card-border-width) solid rgba(var(--card-border-color), var(--card-border-opacity));
+      backdrop-filter: blur(calc(var(--glass-blur) - 2px));
     }
 
-    /* small mute button */
-    .mute {
-      display: inline-grid;
-      place-items: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.01);
-      border: 1px solid rgba(255,255,255,0.02);
-      cursor: pointer;
-      transition: transform 160ms, box-shadow 160ms;
+    .album{
+      width:62px;
+      height:62px;
+      border-radius:8px;
+      overflow:hidden;
+      flex:0 0 62px;
+      border:1px solid rgba(255,255,255,0.04);
+      background:linear-gradient(135deg, rgba(0,0,0,0.15), rgba(0,0,0,0.05));
+    }
+    .album img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .player-meta{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:0;
+      flex:1;
+    }
+    .song-title{
+      font-weight:600;
+      color:var(--accent-color);
+      font-size:15px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .song-artist{
+      font-size:13px;
+      color:var(--muted-color);
     }
 
-    .mute:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 36px rgba(0,0,0,0.6);
+    .player-controls{
+      display:flex;
+      align-items:center;
+      gap:12px;
     }
 
-    .mute svg {
-      width: 18px;
-      height: 18px;
-      fill: #efe9d6;
+    /* seek bar */
+    .seekbar{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      width:100%;
+    }
+    .seek{
+      position:relative;
+      height:6px;
+      background:rgba(255,255,255,0.04);
+      border-radius:999px;
+      overflow:hidden;
+      flex:1;
+    }
+    .seek > .progress{
+      position:absolute;
+      left:0; top:0; bottom:0;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent-color), rgba(255,255,255,0.8));
+      border-radius:999px;
+      transition:width .12s linear;
+    }
+    .seek input[type=range]{
+      -webkit-appearance:none;
+      appearance:none;
+      width:100%;
+      height:6px;
+      background:transparent;
+      position:relative;
+      margin:0;
+      cursor:pointer;
+    }
+    .seek input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      width:12px; height:12px;
+      border-radius:50%;
+      background:#fff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      border: 2px solid rgba(0,0,0,0.3);
+    }
+    .time{
+      min-width:82px;
+      text-align:right;
+      font-size:13px;
+      color:var(--muted-color);
     }
 
-    /* small responsive tweaks for player layout */
-    @media (max-width: 880px) {
-      .card {
-        grid-template-columns: 100px 1fr;
-        padding: 20px;
-        gap: 16px;
-        border-radius: 20px;
-      }
-
-      .pfp { width: 100px; height: 100px; }
-      .username { font-size: 26px; }
-      .player { flex-direction: column; gap: 14px; align-items: stretch; }
-      .controls { order: 3; }
-      .player .meta { order: 2; width: 100%; justify-content: flex-start; }
+    .controls-left{
+      display:flex;
+      gap:12px;
+      align-items:center;
     }
 
-    @media (max-width: 520px) {
-      .card {
-        grid-template-columns: 1fr;
-        text-align: center;
-        padding: 18px;
-        gap: 12px;
-      }
+    .control-btn{
+      display:inline-grid;
+      place-items:center;
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,0.03);
+      background:rgba(255,255,255,0.02);
+    }
+    .control-btn svg{ width:16px; height:16px; fill:currentColor; color:var(--muted-color); }
+    .control-btn.playing svg{ color:var(--accent-color); }
 
-      .pfp { margin: 0 auto; }
-      .meta { align-items: center; }
-      .actions { grid-template-columns: 1fr; }
-      .socials-grid { justify-content: center; }
-      .badges { justify-content: center; }
+    /* volume */
+    .volume{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .volume input[type=range]{ width:90px; }
+    .volume input[type=range]::-webkit-slider-thumb{
+      -webkit-appearance:none;
+      width:10px;height:10px;border-radius:50%;background:#fff;border:1px solid rgba(0,0,0,0.2);
     }
 
-    /* ==========================================================================
-       Footer small decorative art & subtle animations
-       ========================================================================== */
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 700;
-      font-size: 13px;
-      color: rgba(239,233,214,0.9);
+    /* small responsive adjustments */
+    @media (max-width:660px){
+      .profile-card{ gap:12px; flex-direction:row; padding:14px; align-items:center; }
+      .pfp-wrap{ width:72px; flex:0 0 72px; }
+      .display-name{ font-size:22px; }
+      .player{ flex-direction:column; height:auto; gap:10px; padding:12px; align-items:stretch; }
+      .album{ width:56px; height:56px; }
+      .time{ text-align:left; min-width:0; }
     }
-
-    .brand img {
-      width: 20px;
-      height: 20px;
-      display: inline-block;
-      border-radius: 4px;
-    }
-
-    /* Add subtle fade-in animation for main content */
-    .fadeIn {
-      animation: fadeIn 720ms cubic-bezier(.2,.9,.2,1) both;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ==========================================================================
-       Aesthetic helper classes (spacing / small text)
-       ========================================================================== */
-
-    .muted {
-      color: rgba(239,233,214,0.62);
-      font-size: 13px;
-    }
-
-    .tiny {
-      font-size: 12px;
-    }
-
-    /* ==========================================================================
-       Long comment block filler to increase file length for editability.
-       You can safely remove or update any of this without breaking layout.
-       ========================================================================== */
-
-    /*
-      This file intentionally contains a large amount of comments and
-      structured CSS rules to be readable and editable. Feel free to:
-        - Change colors in :root variables (if you add them)
-        - Change border-radius values to get sharper squares or softer pills
-        - Replace fonts by swapping the <link> in <head>
-        - Add or remove social badges — each is a <a class="social">...
-        - Edit the player controls in the SCRIPT at the end to add playlists
-    */
-
-    /* End of CSS */
   </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="card-column">
 
-  <!-- subtle grain overlay (visual only) -->
-  <div class="grain" aria-hidden="true"></div>
+      <!-- PROFILE CARD -->
+      <div class="profile-card" role="region" aria-label="Profile card for @zc">
+        <div class="pfp-wrap">
+          <!-- placeholder profile pic -->
+          <img src="pfp.png" alt="profile picture of @zc">
+        </div>
 
-  <!--
-    Header: top-of-page branding + small nav
-    Semantic element used for structure.
-  -->
-  <header class="container fadeIn" role="banner">
-    <div style="height:6px" aria-hidden="true"></div>
+        <div class="profile-meta">
+          <div class="meta-top">
+            <div class="name-and-badges">
+              <h1 class="display-name">@zc</h1>
 
-    <!-- branding row -->
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-      <div class="brand">
-        <img src="head.png" alt="@zc favicon placeholder" />
-        <span>@zc</span>
+              <!-- BADGES (auto width) -->
+              <div class="badges" aria-hidden="false">
+                <div class="badge" data-tooltip="Owner"><img src="owner.png" alt="owner badge"></div>
+                <div class="badge" data-tooltip="Developer"><img src="dev.png" alt="dev badge"></div>
+                <div class="badge" data-tooltip="Artist"><img src="artist.png" alt="artist badge"></div>
+                <div class="badge" data-tooltip="Premium"><img src="premium.png" alt="premium badge"></div>
+                <div class="badge" data-tooltip="Bug Hunter"><img src="bug.png" alt="bug badge"></div>
+                <div class="badge" data-tooltip="Verified"><img src="verified.png" alt="verified badge"></div>
+                <div class="badge" data-tooltip="Profile"><img src="pfp.png" alt="pfp badge"></div>
+              </div>
+            </div>
+
+            <div class="meta-actions">
+              <!-- possible action icons (kept minimal for the example) -->
+            </div>
+          </div>
+
+          <!-- BIO (smaller font, change color/opacity via --bio-color) -->
+          <p class="bio">Minimalist music-loving creator. I share tracks, art, and tiny internet projects. Click the links below to follow.</p>
+
+          <!-- socials -->
+          <div class="socials" aria-label="Social links">
+            <a href="#" class="social" data-tooltip="Last.fm" aria-label="Last.fm">
+              <img src="lastfm.png" alt="lastfm">
+            </a>
+            <a href="#" class="social" data-tooltip="Instagram" aria-label="Instagram">
+              <img src="instagram.png" alt="instagram">
+            </a>
+          </div>
+        </div>
       </div>
 
-      <nav aria-label="Profile quick links" class="muted tiny" style="display:flex;gap:12px;align-items:center">
-        <a href="#links">links</a>
-        <a href="#music">music</a>
-        <a href="#badges">badges</a>
-      </nav>
+      <!-- MUSIC PLAYER (uses song.mp3) -->
+      <div class="player" id="player">
+        <div class="album">
+          <img src="pfp.png" id="album-art" alt="album art">
+        </div>
+
+        <div class="player-meta">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+            <div style="min-width:0;flex:1">
+              <div class="song-title" id="song-title">Unknown Song</div>
+              <div class="song-artist" id="song-artist">Unknown Artist</div>
+            </div>
+
+            <div class="player-controls" style="flex:0 0 auto;">
+              <div class="controls-left">
+                <button id="prevBtn" class="control-btn" title="Previous" aria-label="Previous">
+                  <!-- simple icon -->
+                  <svg viewBox="0 0 24 24"><path d="M6 6v12l8.5-6L6 6zM18 6v12h-2V6h2z"/></svg>
+                </button>
+
+                <button id="playBtn" class="control-btn" title="Play" aria-label="Play/Pause">
+                  <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+
+                <button id="nextBtn" class="control-btn" title="Next" aria-label="Next">
+                  <svg viewBox="0 0 24 24"><path d="M16 6v12l-8.5-6L16 6zM6 6v12H4V6h2z"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="seekbar">
+            <div class="seek">
+              <div class="progress" id="progress"></div>
+              <input id="seekRange" type="range" min="0" max="100" value="0" />
+            </div>
+
+            <div class="time" id="timeDisplay">0:00 / 0:00</div>
+
+            <div class="volume" title="Volume">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.9">
+                <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor" style="color:var(--muted-color)"/>
+              </svg>
+              <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8" />
+            </div>
+          </div>
+        </div>
+
+        <!-- hidden audio element -->
+        <audio id="audio" src="song.mp3" preload="metadata"></audio>
+      </div>
+
+      <!-- small note or links area -->
+      <div style="margin-top:10px;color:rgba(255,255,255,0.06);font-size:12px;">Site name / title: <strong>@zc</strong></div>
+
     </div>
-  </header>
+  </div>
 
-  <!-- Main content area -->
-  <main class="container" role="main">
-
-    <!-- Main profile card (visually centered) -->
-    <section class="card fadeIn" aria-labelledby="profileHeading">
-      <!-- Left column: profile picture -->
-      <div class="pfp" aria-hidden="false" title="@zc profile picture">
-        <img src="pfp.png" alt="@zc profile image (pfp.png placeholder)" />
-        <div class="pfp-badge" aria-hidden="true">
-          <!-- small staff glyph -->
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C11.45 2 11 2.45 11 3V5H9C7.9 5 7 5.9 7 7V9H5C4.45 9 4 9.45 4 10C4 10.55 4.45 11 5 11H7V13C7 14.1 7.9 15 9 15H11V17C11 17.55 11.45 18 12 18C12.55 18 13 17.55 13 17V15H15C16.1 15 17 14.1 17 13V11H19C19.55 11 20 10.55 20 10C20 9.45 19.55 9 19 9H17V7C17 5.9 16.1 5 15 5H13V3C13 2.45 12.55 2 12 2Z" fill="black"/>
-          </svg>
-          <span style="font-weight:700;color:#0b0b0b;">staff</span>
-        </div>
-      </div>
-
-      <!-- Right column: user meta and actions -->
-      <div class="meta" id="profileHeading">
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <div class="username" aria-hidden="false">@zc
-            <span class="role" aria-hidden="true">staff</span>
-          </div>
-          <!-- tiny public role / extra control placeholder -->
-        </div>
-
-        <div class="about">
-          A minimal, aesthetic taplist for my online presence. I build things,
-          design small webtoy experiences, and listen to too much music. This page
-          is a curated hub for socials, music and the badges I collect.
-        </div>
-
-        <div class="joined">joined over 1 year ago</div>
-
-        <div class="divider" role="separator" aria-hidden="true"></div>
-
-        <!-- Socials -->
-        <div id="links">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-            <div class="socials-grid" aria-label="social links">
-              <!-- Instagram -->
-              <a class="social" href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <img src="Instagram.png" alt="Instagram icon" />
-                <span class="tooltip" role="tooltip">Instagram</span>
-              </a>
-
-              <!-- Last.fm -->
-              <a class="social" href="https://last.fm" target="_blank" rel="noopener noreferrer" aria-label="Last.fm">
-                <img src="lastfm.png" alt="Last.fm icon" />
-                <span class="tooltip" role="tooltip">Last.fm</span>
-              </a>
-
-              <!-- Example extra social placeholders -->
-              <a class="social" href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                <!-- inline svg fallback icon (no external asset) -->
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 2C7.03 2 3 6.03 3 11C3 14.87 5.43 17.92 8.6 19.21C9 19.31 9.17 19.02 9.17 18.78C9.17 18.56 9.16 17.9 9.16 17.11C6.73 17.61 6.08 15.99 6.08 15.99C5.64 14.86 5.03 14.49 5.03 14.49C4.18 13.88 5.1 13.89 5.1 13.89C6.06 13.96 6.56 14.86 6.56 14.86C7.39 16.3 8.84 15.9 9.45 15.66C9.56 15.06 9.84 14.65 10.15 14.39C7.84 14.13 5.39 13.14 5.39 9.36C5.39 8.27 5.77 7.42 6.38 6.76C6.28 6.5 5.94 5.57 6.45 4.2C6.45 4.2 7.31 3.9 9.15 5.16C9.99 4.95 10.9 4.85 11.8 4.85C12.7 4.85 13.61 4.95 14.45 5.16C16.29 3.9 17.15 4.2 17.15 4.2C17.66 5.57 17.32 6.5 17.22 6.76C17.83 7.42 18.21 8.27 18.21 9.36C18.21 13.15 15.76 14.13 13.44 14.39C13.85 14.74 14.21 15.44 14.21 16.54C14.21 18.08 14.2 19.32 14.2 19.78C14.2 20.03 14.37 20.33 14.78 20.21C17.95 18.93 20.39 15.88 20.39 12.02C20.39 6.03 16.36 2 12 2Z" fill="#efe9d6"/>
-                </svg>
-                <span class="tooltip">GitHub</span>
-              </a>
-            </div>
-
-            <!-- small call to action buttons next to socials -->
-            <div style="display:flex;gap:10px;align-items:center">
-              <a class="cta" href="#music" aria-label="Jump to music">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" fill="#efe9d6"/>
-                </svg>
-                music
-              </a>
-
-              <a class="cta" href="#badges" aria-label="Jump to badges">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M12 2l2.39 4.85L19 8.24l-3.2 3.12.72 4.9L12 15.77 7.49 16.26l.72-4.9L5 8.24l4.61-1.39L12 2z" fill="#efe9d6"/>
-                </svg>
-                badges
-              </a>
-            </div>
-          </div>
-
-          <!-- badges area -->
-          <div id="badges" class="badges" aria-label="Badges" style="margin-top:14px;">
-            <div class="badge" title="owner">
-              <img src="owner.png" alt="owner badge" />
-              <span class="tooltip">owner</span>
-            </div>
-
-            <div class="badge" title="dev">
-              <img src="dev.png" alt="developer badge" />
-              <span class="tooltip">dev</span>
-            </div>
-
-            <div class="badge" title="artist">
-              <img src="artist.png" alt="artist badge" />
-              <span class="tooltip">artist</span>
-            </div>
-
-            <div class="badge" title="premium">
-              <img src="premium.png" alt="premium badge" />
-              <span class="tooltip">premium</span>
-            </div>
-
-            <div class="badge" title="bug hunter">
-              <img src="bug.png" alt="bug hunter badge" />
-              <span class="tooltip">bug</span>
-            </div>
-
-            <div class="badge" title="verified">
-              <img src="verified.png" alt="verified badge" />
-              <span class="tooltip">verified</span>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Music player section (explicitly requested to be below the main body) -->
-    <section id="music" class="container" aria-labelledby="musicHeading" style="margin-top:20px;">
-      <h2 id="musicHeading" style="display:none">Music Player</h2>
-
-      <div class="player fadeIn" role="region" aria-label="Music player">
-        <!-- song meta -->
-        <div class="meta">
-          <div class="album-art">
-            <img src="artist.png" alt="Album art (artist.png placeholder)" />
-          </div>
-
-          <div class="song-info">
-            <div class="song-title" id="songTitle">Untitled Track</div>
-            <div class="song-artist" id="songArtist">Unknown Artist</div>
-            <div class="muted tiny">Local file: song.mp3</div>
-          </div>
-        </div>
-
-        <!-- controls -->
-        <div class="controls" style="min-width:320px;">
-          <div class="buttons" role="group" aria-label="Playback controls">
-            <button class="btn" id="prevBtn" title="Previous" aria-label="Previous track">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M6 6v12l10-6L6 6zM19 6v12h-2V6h2z" fill="#efe9d6"/>
-              </svg>
-            </button>
-
-            <button class="btn" id="playBtn" title="Play / Pause" aria-label="Play">
-              <!-- Play symbol by default; JS toggles to pause -->
-              <svg id="playIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M8 5v14l11-7L8 5z" fill="#efe9d6"/>
-              </svg>
-              <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:none">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="#efe9d6"/>
-              </svg>
-            </button>
-
-            <button class="btn" id="nextBtn" title="Next" aria-label="Next track">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M18 6v12l-10-6 10-6zM5 6v12H3V6h2z" fill="#efe9d6"/>
-              </svg>
-            </button>
-          </div>
-
-          <!-- progress -->
-          <div class="progressWrap">
-            <div class="time" id="currentTime">0:00</div>
-            <input type="range" class="progress" id="seekBar" min="0" step="0.01" value="0" aria-label="Track progress" />
-            <div class="time" id="durationTime">0:00</div>
-          </div>
-        </div>
-
-        <!-- Volume / small controls -->
-        <div class="volumeWrap" style="min-width:200px;">
-          <button class="mute" id="muteBtn" aria-label="Mute">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 9v6h4l5 4V5L9 9H5z" fill="#efe9d6"/>
-            </svg>
-          </button>
-
-          <input type="range" class="volume" id="volume" min="0" max="1" step="0.01" value="0.85" aria-label="Volume" />
-
-        </div>
-      </div>
-
-      <!-- Description below player with subtle credits -->
-      <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-        <div class="muted tiny">Custom music player • smooth animations • local audio file</div>
-        <div class="muted tiny">Tip: Replace <code>song.mp3</code> and <code>artist.png</code> with your own files.</div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="container fadeIn" role="contentinfo">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-      <div class="muted tiny">© <strong>@zc</strong> · curated links & music</div>
-      <div class="muted tiny">Built with ❤️ · minimal · responsive</div>
-    </div>
-  </footer>
-
-  <!--
-    JavaScript: Controls for custom music player, progressive UI updates,
-    tooltips/hover interactions done in CSS; JS handles audio and interactivity.
-
-    No external libraries. Keep scripts in this file.
-  -->
+  <!-- ======= JS for player & interactions ======= -->
   <script>
-    /*
-      Music Player JS
-      ----------------
-      - Loads song.mp3
-      - Controls play/pause, progress, seek, volume, mute
-      - Updates UI elements (time, progress)
-      - Smooth transitions and event handling
-    */
-
-    (function () {
-      // Query player elements
-      const audio = new Audio('song.mp3');
-      audio.preload = 'metadata';
-      audio.crossOrigin = "anonymous";
-
+    (function(){
+      const audio = document.getElementById('audio');
       const playBtn = document.getElementById('playBtn');
       const playIcon = document.getElementById('playIcon');
-      const pauseIcon = document.getElementById('pauseIcon');
+      const seekRange = document.getElementById('seekRange');
+      const progress = document.getElementById('progress');
+      const timeDisplay = document.getElementById('timeDisplay');
+      const vol = document.getElementById('vol');
+      const albumArt = document.getElementById('album-art');
+      const songTitleEl = document.getElementById('song-title');
+      const songArtistEl = document.getElementById('song-artist');
 
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-
-      const seekBar = document.getElementById('seekBar');
-      const currentTimeEl = document.getElementById('currentTime');
-      const durationTimeEl = document.getElementById('durationTime');
-
-      const volumeSlider = document.getElementById('volume');
-      const muteBtn = document.getElementById('muteBtn');
-
-      const songTitle = document.getElementById('songTitle');
-      const songArtist = document.getElementById('songArtist');
-
-      // Placeholder metadata — update as needed or parse ID3 tags with a library
+      // Placeholder metadata - you can change these values dynamically
       const metadata = {
         title: "Sample Track",
-        artist: "Unknown Artist",
-        album: "Local File",
+        artist: "Various",
+        cover: "pfp.png"
       };
+      songTitleEl.textContent = metadata.title;
+      songArtistEl.textContent = metadata.artist;
+      albumArt.src = metadata.cover;
 
-      // Apply metadata to UI
-      songTitle.textContent = metadata.title;
-      songArtist.textContent = metadata.artist;
+      // update volume initial
+      audio.volume = parseFloat(vol.value || 0.8);
 
-      // volume init
-      audio.volume = parseFloat(volumeSlider.value);
-
-      // Play / Pause toggling
-      function updatePlayUI(isPlaying) {
-        if (isPlaying) {
-          playIcon.style.display = 'none';
-          pauseIcon.style.display = 'block';
-          playBtn.setAttribute('aria-label', 'Pause');
-          playBtn.setAttribute('title', 'Pause');
+      // toggle play/pause
+      function togglePlay(){
+        if(audio.paused){
+          audio.play();
         } else {
-          playIcon.style.display = 'block';
-          pauseIcon.style.display = 'none';
-          playBtn.setAttribute('aria-label', 'Play');
-          playBtn.setAttribute('title', 'Play');
-        }
-      }
-
-      let isPlaying = false;
-
-      async function togglePlay() {
-        try {
-          if (!isPlaying) {
-            await audio.play();
-            isPlaying = true;
-            updatePlayUI(true);
-          } else {
-            audio.pause();
-            isPlaying = false;
-            updatePlayUI(false);
-          }
-        } catch (err) {
-          console.warn("Playback failed:", err);
+          audio.pause();
         }
       }
 
       playBtn.addEventListener('click', togglePlay);
 
-      // prev/next simple behaviour (rewind/fast-forward by 10s)
-      prevBtn.addEventListener('click', () => {
-        audio.currentTime = Math.max(0, audio.currentTime - 10);
-        flashButton(prevBtn);
+      audio.addEventListener('play', function(){
+        playBtn.classList.add('playing');
+        // change icon to pause
+        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+      });
+      audio.addEventListener('pause', function(){
+        playBtn.classList.remove('playing');
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
       });
 
-      nextBtn.addEventListener('click', () => {
-        audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10);
-        flashButton(nextBtn);
+      // Update duration and time
+      audio.addEventListener('loadedmetadata', function(){
+        seekRange.value = 0;
+        updateTimeDisplay();
       });
 
-      // flash visual feedback on click
-      function flashButton(btn) {
-        btn.animate([
-          { transform: 'translateY(0)' },
-          { transform: 'translateY(-6px) scale(1.02)' },
-          { transform: 'translateY(0)' }
-        ], { duration: 260, easing: 'cubic-bezier(.2,.9,.2,1)'});
-      }
-
-      // Update metadata once loaded
-      audio.addEventListener('loadedmetadata', () => {
-        const d = audio.duration || 0;
-        durationTimeEl.textContent = formatTime(d);
-        seekBar.max = d;
+      audio.addEventListener('timeupdate', function(){
+        const percent = (audio.currentTime / (audio.duration || 1)) * 100;
+        progress.style.width = percent + '%';
+        seekRange.value = percent;
+        updateTimeDisplay();
       });
 
-      // Update progress while playing
-      audio.addEventListener('timeupdate', () => {
-        const t = audio.currentTime || 0;
-        currentTimeEl.textContent = formatTime(t);
-        // update seek bar without jumping if user is dragging
-        if (!seekBar._dragging) seekBar.value = t;
+      seekRange.addEventListener('input', function(e){
+        const pct = parseFloat(e.target.value || 0);
+        progress.style.width = pct + '%';
+        if(audio.duration){
+          audio.currentTime = (pct/100) * audio.duration;
+        }
       });
 
-      // Seek bar interactions
-      seekBar.addEventListener('input', (e) => {
-        // while dragging, show value in currentTime (optimistic)
-        const value = parseFloat(e.target.value);
-        currentTimeEl.textContent = formatTime(value);
-      });
-
-      seekBar.addEventListener('mousedown', () => seekBar._dragging = true);
-      seekBar.addEventListener('touchstart', () => seekBar._dragging = true);
-
-      seekBar.addEventListener('change', (e) => {
-        const value = parseFloat(e.target.value);
-        audio.currentTime = value;
-        seekBar._dragging = false;
-      });
-
-      // Sync volume slider with audio
-      volumeSlider.addEventListener('input', (e) => {
+      vol.addEventListener('input', function(e){
         audio.volume = parseFloat(e.target.value);
-        if (audio.volume === 0) {
-          muteBtn.setAttribute('aria-pressed', 'true');
-        } else {
-          muteBtn.setAttribute('aria-pressed', 'false');
-        }
       });
 
-      // Mute toggle
-      let lastVolume = parseFloat(volumeSlider.value) || 0.8;
-      muteBtn.addEventListener('click', () => {
-        if (!audio.muted) {
-          audio.muted = true;
-          lastVolume = audio.volume;
-          audio.volume = 0;
-          volumeSlider.value = 0;
-          muteBtn.setAttribute('aria-pressed', 'true');
-        } else {
-          audio.muted = false;
-          audio.volume = lastVolume || 0.85;
-          volumeSlider.value = audio.volume;
-          muteBtn.setAttribute('aria-pressed', 'false');
-        }
-      });
-
-      // Pause UI update when playback ends
-      audio.addEventListener('ended', () => {
-        isPlaying = false;
-        updatePlayUI(false);
-        audio.currentTime = 0;
-        seekBar.value = 0;
-      });
-
-      // Format seconds to M:SS
-      function formatTime(s) {
-        if (!s || isNaN(s)) return "0:00";
-        s = Math.floor(s);
-        const m = Math.floor(s / 60);
-        const sec = s % 60;
-        return m + ":" + (sec < 10 ? "0" + sec : sec);
+      function formatTime(t){
+        if(!isFinite(t)) return '0:00';
+        const s = Math.floor(t % 60).toString().padStart(2,'0');
+        const m = Math.floor(t / 60);
+        return m + ':' + s;
       }
 
-      // Accessibility: space/enter to toggle play on focused play button
-      playBtn.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' || e.code === 'Enter') {
+      function updateTimeDisplay(){
+        const cur = formatTime(audio.currentTime || 0);
+        const dur = formatTime(audio.duration || 0);
+        timeDisplay.textContent = cur + ' / ' + dur;
+      }
+
+      // prev / next (simple reset)
+      document.getElementById('prevBtn').addEventListener('click', function(){
+        audio.currentTime = Math.max(0, audio.currentTime - 15);
+      });
+      document.getElementById('nextBtn').addEventListener('click', function(){
+        audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 15);
+      });
+
+      // keyboard: space toggles play/pause when page focused
+      window.addEventListener('keydown', function(e){
+        if(e.code === 'Space' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA'){
           e.preventDefault();
           togglePlay();
         }
       });
 
-      // Feature: double-click player to toggle play/pause for quick interaction
-      document.querySelector('.player').addEventListener('dblclick', () => togglePlay());
-
-      // Update initial UI
-      updatePlayUI(false);
-
-      // tidy: allow pressing 'k' to toggle playback, 'm' to mute/unmute
-      document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        if (e.key === 'k') togglePlay();
-        if (e.key === 'm') muteBtn.click();
-        if (e.key === 'j') audio.currentTime = Math.max(0, audio.currentTime - 10);
-        if (e.key === 'l') audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10);
+      // small enhancement: click on progress bar to seek
+      const seekContainer = document.querySelector('.seek');
+      seekContainer.addEventListener('click', function(e){
+        const rect = seekContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const pct = Math.max(0, Math.min(1, x / rect.width));
+        if(audio.duration) audio.currentTime = pct * audio.duration;
       });
 
-      // Small progressive enhancement: try to set a better title from metadata if browser supports fetch of file (not implemented here)
-      // You can add ID3 parsing later if you want to auto-fill title/artist from song.mp3
-
-      // End of audio handling IIFE
+      // social links tooltips are CSS-only (data-tooltip attribute set in markup)
     })();
   </script>
-
-  <!-- A final long comment block to increase file length (safe to delete) -->
-  <!--
-    ======================================================================
-    NOTES & EDITING GUIDE
-    ----------------------------------------------------------------------
-    - To change username/title: edit <title> tag and the .username element content.
-    - To replace profile picture: replace pfp.png file with your new image (same name)
-      or change the <img src="..."> path in the .pfp element.
-    - To add/remove socials: copy the template <a class="social"> element.
-      Make sure to include the tooltip span and an accessible aria-label attr.
-    - To add more badges: copy a .badge element and change img src and tooltip.
-    - Music player:
-      - Replace song.mp3 with a file of the same name or update the audio src in the JS.
-      - Replace artist.png with your album art or singer image.
-      - To add a playlist, you'll need to modify the JavaScript to manage an array of sources & metadata.
-    - Colors & style:
-      - Main text color is #efe9d6, background is near black (#050505).
-      - Accent color uses subtle cream + warm browns in gradients.
-      - To change theme: update the CSS color tokens or replace gradients.
-    - Responsiveness:
-      - Breakpoints defined at 880px and 520px. Tweak to taste.
-    - Accessibility:
-      - Buttons have aria-labels; seek and volume ranges have aria-labels.
-      - For screen reader improvements, you can add live region updates for current time or track changes.
-
-    Have fun customizing — the file is intentionally verbose so you can find and edit pieces quickly.
-    ======================================================================
-  -->
-
 </body>
 </html>
