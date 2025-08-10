@@ -1,1136 +1,425 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>My Bio • Minimal Link</title>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@zc</title>
+    <link rel="icon" type="image/png" href="head.png">
 
-  <!--
-    Fonts:
-    - Using Inter for a modern look. The @import is in the CSS below so all styles remain inside a single file.
-    - If you prefer not to load external fonts, simply remove the @import and rely on the system stack.
-  -->
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-  <!-- All CSS is kept here inside a single <style> tag as requested -->
-  <style>
-    /* =========================================================================
-       Base / Reset
-       =========================================================================
-       This section normalizes some browser defaults and provides the base
-       typography & layout variables. Edit the CSS variables to change theme.
-    ========================================================================= */
-    /* Import Inter font from Google Fonts (optional, remove if offline) */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+    <style>
+        /* ===========================
+           GLOBAL RESET & THEME
+        ============================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    :root{
-      /* Color system (dark minimal) */
-      --bg: #0b0f14;                /* page background */
-      --surface: #0f161b;           /* card / panel surface */
-      --muted: #99a1ab;             /* muted text */
-      --text: #e6eef2;              /* primary text */
-      --accent: #6ee7b7;            /* mint/green accent */
-      --accent-2: #7dd3fc;          /* blue accent for variety */
-      --danger: #ff6b6b;            /* for error/badges */
-      --glass: rgba(255,255,255,0.03); /* subtle glass */
-      --shadow: 0 8px 20px rgba(3,7,12,0.6);
-      --card-radius: 16px;
-      --radius-sm: 8px;
-      --max-width: 920px;
-      --content-padding: 24px;
-      --transition-fast: 180ms;
-      --transition-medium: 300ms;
-      --transition-slow: 420ms;
-      --backdrop: linear-gradient(180deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.00) 100%);
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    /* Simple reset */
-    *, *::before, *::after { box-sizing: border-box; }
-    html,body { height:100%; }
-    body{
-      margin:0;
-      min-height:100%;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:
-        radial-gradient(1200px 600px at 10% 10%, rgba(125,211,252,0.04), transparent 6%),
-        radial-gradient(900px 480px at 95% 90%, rgba(110,231,183,0.03), transparent 6%),
-        var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.35;
-      -webkit-tap-highlight-color: transparent;
-      scroll-behavior: smooth; /* smooth scrolling between anchors */
-      padding: clamp(18px, 3vw, 40px);
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #0d0d0d, #1a1a1a);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
 
-    a { color: inherit; text-decoration: none; outline: none; }
-    img { display:block; max-width:100%; height:auto; -webkit-user-drag: none; user-select: none; }
-    button { font: inherit; }
+        img {
+            user-select: none;
+        }
 
-    /* =========================================================================
-       Layout: container & cards
-       ========================================================================= */
-    .container {
-      width: min(var(--max-width), 100%);
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 28px;
-      align-items: start;
-      padding: var(--content-padding);
-    }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-    /* Make the layout responsive: stack on small screens */
-    @media (max-width: 920px){
-      .container { grid-template-columns: 1fr; gap:18px; }
-    }
+        /* ===========================
+           HEADER / HERO
+        ============================ */
+        header {
+            width: 100%;
+            max-width: 900px;
+            background: #111;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
 
-    /* Card base styles - used by multiple sections to maintain visual rhythm */
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius: var(--card-radius);
-      box-shadow: var(--shadow);
-      padding: 20px;
-      border: 1px solid rgba(255,255,255,0.03);
-      backdrop-filter: blur(6px);
-    }
+        header img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-    /* =========================================================================
-       Header / Profile column (left column)
-       ========================================================================= */
-    header.profile {
-      position: sticky;
-      top: 30px;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      align-self:start;
-    }
+        /* ===========================
+           PROFILE CARD
+        ============================ */
+        .profile-card {
+            margin-top: -50px;
+            background: #141414;
+            border-radius: 16px;
+            padding: 20px;
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
 
-    /* Profile card */
-    .profile-card {
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      text-align:center;
-      padding: 28px;
-      gap:16px;
-    }
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
 
-    /* Profile picture wrapper */
-    .pfp-wrap{
-      width:140px;
-      height:140px;
-      border-radius:50%;
-      overflow:hidden;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.04);
-      display:grid;
-      place-items:center;
-      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
-    }
-    .pfp-wrap:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 18px 40px rgba(0,0,0,0.7); }
+        .username {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
 
-    .pfp-wrap img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-    }
+        .about {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
 
-    /* Username / meta */
-    .username {
-      font-weight:700;
-      font-size:1.4rem;
-      letter-spacing: -0.01em;
-      margin:0;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:center;
-    }
-    .username .handle {
-      font-weight:500;
-      color:var(--muted);
-      font-size:0.95rem;
-    }
+        /* ===========================
+           SOCIAL LINKS
+        ============================ */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
 
-    /* Short description */
-    .bio {
-      color:var(--muted);
-      font-size:0.95rem;
-      max-width:280px;
-      margin:0;
-    }
+        .social-links a {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #1e1e1e;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            transition: all 0.2s ease-in-out;
+        }
 
-    /* Quick stats / small links inside profile card */
-    .profile-quick {
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-    .pill {
-      padding:6px 10px;
-      border-radius:18px;
-      background: rgba(255,255,255,0.02);
-      color:var(--muted);
-      font-weight:600;
-      font-size:0.85rem;
-      border: 1px solid rgba(255,255,255,0.02);
-      transition: transform var(--transition-fast), background var(--transition-fast);
-    }
-    .pill:hover{ transform: translateY(-4px); background: rgba(125,211,252,0.04); color:var(--accent-2); }
+        .social-links a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
 
-    /* =========================================================================
-       Main column (right column) sections
-       ========================================================================= */
-    main {
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
+        .social-links img {
+            width: 28px;
+            height: 28px;
+        }
 
-    /* Section headers for consistency */
-    .section-title {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:6px;
-    }
-    .section-title h2{
-      margin:0;
-      font-size:1rem;
-      color:var(--text);
-      font-weight:700;
-      letter-spacing: -0.01em;
-    }
-    .section-title p {
-      margin:0;
-      color:var(--muted);
-      font-size:0.85rem;
-    }
+        /* Tooltip */
+        .social-links a span {
+            position: absolute;
+            bottom: -26px;
+            background: #000;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
 
-    /* =========================================================================
-       Socials section (grid of clickable icons)
-       ========================================================================= */
-    .socials {
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap:12px;
-      align-items:center;
-    }
+        .social-links a:hover span {
+            opacity: 1;
+        }
 
-    .social-link {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:12px;
-      border-radius:12px;
-      transition: transform var(--transition-medium), box-shadow var(--transition-medium), background var(--transition-medium);
-      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
-      border: 1px solid rgba(255,255,255,0.025);
-      box-shadow: 0 4px 18px rgba(2,6,10,0.5);
-    }
+        /* ===========================
+           MUSIC PLAYER
+        ============================ */
+        .music-player {
+            background: #1b1b1b;
+            border-radius: 16px;
+            padding: 20px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    .social-link:hover{ transform: translateY(-6px); box-shadow: 0 14px 36px rgba(2,6,10,0.6); }
+        .album-art {
+            width: 150px;
+            height: 150px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
 
-    /* icon container */
-    .social-icon {
-      width:44px;
-      height:44px;
-      border-radius:10px;
-      display:grid;
-      place-items:center;
-      background:var(--glass);
-      flex-shrink:0;
-      transition: transform var(--transition-fast);
-      position:relative;
-      overflow:visible;
-    }
+        .song-info {
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-    /* icon image */
-    .social-icon img { width:28px; height:28px; display:block; }
+        .song-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
 
-    /* label and small description inside link */
-    .social-label {
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      overflow:hidden;
-    }
-    .social-label .title { font-weight:600; font-size:0.95rem; }
-    .social-label .desc { font-size:0.82rem; color:var(--muted); }
+        .song-artist {
+            font-size: 0.9rem;
+            color: #bbb;
+        }
 
-    /* hover effect: icon slightly enlarge and tooltip appears */
-    .social-link:hover .social-icon { transform: scale(1.12); }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
 
-    /* tooltip for socials (custom, accessible) */
-    .tooltip {
-      position:absolute;
-      left:50%;
-      transform: translateX(-50%) translateY(-10px);
-      top:-10px;
-      padding:8px 10px;
-      border-radius:8px;
-      background: rgba(8,12,16,0.9);
-      color:var(--text);
-      font-size:0.82rem;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
-      opacity:0;
-      pointer-events:none;
-      white-space:nowrap;
-      transition: opacity var(--transition-medium) ease, transform var(--transition-medium) ease;
-      z-index:20;
-      border: 1px solid rgba(255,255,255,0.03);
-    }
+        .controls button {
+            background: #333;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-    /* show tooltip when parent has data-show attr (JS toggles) AND on hover focus visible */
-    .social-icon[data-show="true"] .tooltip,
-    .social-link:focus-within .tooltip,
-    .social-link:hover .tooltip {
-      opacity:1;
-      transform: translateX(-50%) translateY(-18px);
-      pointer-events:auto;
-    }
+        .controls button:hover {
+            background: #555;
+        }
 
-    /* small caret under tooltip */
-    .tooltip::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:-6px;
-      width:10px;
-      height:10px;
-      background: rgba(8,12,16,0.9);
-      border-left:1px solid rgba(255,255,255,0.02);
-      border-bottom:1px solid rgba(255,255,255,0.02);
-      transform-origin:center;
-      rotate:45deg;
-      border-radius:2px;
-    }
+        .progress-container {
+            width: 100%;
+            background: #333;
+            height: 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
 
-    /* =========================================================================
-       Music Player (custom)
-       =========================================================================
-       - A fully custom player with play/pause, progress, scrub, time, volume, and
-         a small album art display. JS handles audio element; CSS provides style.
-    ========================================================================= */
+        .progress {
+            height: 100%;
+            background: #0f9d58;
+            width: 0%;
+            border-radius: 3px;
+        }
 
-    .player {
-      display:flex;
-      gap:18px;
-      align-items:center;
-      padding:18px;
-      border-radius:12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.017), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.02);
-      box-shadow: 0 10px 28px rgba(0,0,0,0.5);
-    }
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
 
-    .player-art {
-      width:86px;
-      height:86px;
-      border-radius:12px;
-      overflow:hidden;
-      flex-shrink:0;
-      display:grid;
-      place-items:center;
-      background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.03);
-      box-shadow: inset 0 -6px 20px rgba(0,0,0,0.2);
-    }
-    .player-art img { width:100%; height:100%; object-fit:cover; }
+        .volume-slider {
+            flex: 1;
+            appearance: none;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            outline: none;
+        }
 
-    .player-meta {
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      min-width: 0;
-      flex:1;
-    }
-    .song-title { font-weight:700; font-size:1rem; line-height:1.1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .song-artist { font-weight:500; color:var(--muted); font-size:0.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #0f9d58;
+            border-radius: 50%;
+            cursor: pointer;
+        }
 
-    /* controls row (play/pause, progress & times) */
-    .controls {
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+        /* ===========================
+           BADGES
+        ============================ */
+        .badges {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
 
-    .controls-top {
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
+        .badge {
+            position: relative;
+            width: 40px;
+            height: 40px;
+        }
 
-    .btn {
-      background: transparent;
-      border: none;
-      width:48px;
-      height:48px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      transition: transform var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-    }
-    .btn svg { width:22px; height:22px; fill:var(--text); opacity:0.95; }
-    .btn:active { transform: scale(0.95); }
-    .btn.play {
-      background: linear-gradient(180deg, rgba(125,211,252,0.06), rgba(110,231,183,0.04));
-      border: 1px solid rgba(125,211,252,0.06);
-    }
-    .btn:hover { transform: translateY(-6px) scale(1.03); filter:brightness(1.03); }
+        .badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
 
-    /* progress row */
-    .progress-bar-wrap {
-      display:flex;
-      align-items:center;
-      gap:12px;
-      width:100%;
-    }
-    .time {
-      font-size:0.82rem;
-      color:var(--muted);
-      width:46px;
-      text-align:center;
-      flex:0 0 46px;
-    }
+        .badge span {
+            position: absolute;
+            bottom: -22px;
+            background: #000;
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 6px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            white-space: nowrap;
+        }
 
-    /* Use an input[type=range] but style it to a modern look */
-    .progress {
-      -webkit-appearance:none;
-      appearance:none;
-      width:100%;
-      height:8px;
-      border-radius:999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      outline:none;
-      position:relative;
-      overflow:visible;
-    }
-    .progress::-webkit-slider-thumb {
-      -webkit-appearance:none;
-      appearance:none;
-      width:14px;
-      height:14px;
-      border-radius:50%;
-      background:var(--accent);
-      box-shadow: 0 6px 18px rgba(110,231,183,0.12);
-      border: 2px solid rgba(255,255,255,0.06);
-      transition: transform var(--transition-fast);
-      cursor:pointer;
-    }
-    .progress:active::-webkit-slider-thumb{ transform: scale(1.08); }
+        .badge:hover span {
+            opacity: 1;
+        }
 
-    /* Volume control - small range */
-    .volume {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      min-width:140px;
-    }
-    .volume input[type=range]{
-      width:90px;
-      -webkit-appearance:none;
-      appearance:none;
-      height:6px;
-      border-radius:999px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    }
-    .volume input::-webkit-slider-thumb {
-      -webkit-appearance:none;
-      width:10px; height:10px;
-      border-radius:50%;
-      background:var(--accent-2);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-
-    /* subtle micro animations for waveform-like decoration */
-    .player-wave {
-      width:100%;
-      height:30px;
-      border-radius:6px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0.00) 100%);
-      display:flex;
-      align-items:center;
-      gap:6px;
-      padding:6px;
-      overflow:hidden;
-    }
-    .player-wave .bar {
-      width:6px;
-      height:8px;
-      background: rgba(255,255,255,0.04);
-      border-radius:4px;
-      transform-origin: bottom center;
-      opacity:0.9;
-      animation: wave 1200ms linear infinite;
-    }
-    .player-wave .bar:nth-child(2){ animation-duration:900ms; height:12px; opacity:0.85; }
-    .player-wave .bar:nth-child(3){ animation-duration:1400ms; height:16px; opacity:0.8; }
-    .player-wave .bar:nth-child(4){ animation-duration:800ms; height:10px; opacity:0.85; }
-    .player-wave .bar:nth-child(5){ animation-duration:1200ms; height:14px; opacity:0.9; }
-
-    @keyframes wave {
-      0% { transform: scaleY(0.35); opacity:0.6; }
-      50% { transform: scaleY(1.2); opacity:1; }
-      100% { transform: scaleY(0.35); opacity:0.6; }
-    }
-
-    /* =========================================================================
-       Badges section
-       ========================================================================= */
-    .badges {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .badge {
-      width:56px;
-      height:56px;
-      border-radius:12px;
-      display:grid;
-      place-items:center;
-      padding:8px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-      border: 1px solid rgba(255,255,255,0.02);
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
-      position:relative;
-      overflow:visible;
-    }
-    .badge img { width:40px; height:40px; object-fit:contain; display:block; }
-    .badge:hover { transform: translateY(-8px) scale(1.06); box-shadow: 0 14px 40px rgba(0,0,0,0.6); }
-
-    /* tooltip style same as social tooltips but smaller and centered above badge */
-    .badge .tooltip {
-      font-size:0.82rem;
-      padding:6px 8px;
-    }
-
-    /* =========================================================================
-       Footer / bottom area
-       ========================================================================= */
-    footer {
-      text-align:center;
-      color:var(--muted);
-      font-size:0.85rem;
-      margin-top:6px;
-      opacity:0.9;
-    }
-
-    /* =========================================================================
-       Accessibility / Focus styles
-       ========================================================================= */
-    :focus { outline: none; }
-    a:focus-visible, button:focus-visible, input:focus-visible {
-      outline: 3px solid rgba(125,211,252,0.12);
-      outline-offset:3px;
-      border-radius:8px;
-    }
-
-    /* =========================================================================
-       Extra utilities (spacing, hidden, stack etc.) - for quick edits later
-       ========================================================================= */
-    .stack { display:flex; gap:12px; align-items:center; }
-    .hidden { display:none !important; }
-
-    /* =========================================================================
-       Misc visual flourishes to bump up aesthetics and line count for editability
-       ========================================================================= */
-    .subtle-line {
-      height:1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
-      margin:12px 0;
-      border-radius:2px;
-    }
-
-    /* =========================================================================
-       Responsive refinements (tablet & mobile)
-       ========================================================================= */
-    @media (max-width:680px){
-      .pfp-wrap{ width:110px; height:110px; }
-      .username { font-size:1.1rem; }
-      .container { padding:10px; }
-      .social-link { padding:10px; }
-      .player-art { width:70px; height:70px; }
-      .controls-top { gap:8px; }
-    }
-
-    /* End of stylesheet */
-  </style>
+        /* ===========================
+           RESPONSIVE
+        ============================ */
+        @media (max-width: 600px) {
+            .username {
+                font-size: 1.6rem;
+            }
+            .social-links {
+                gap: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!--
-    Page layout:
-    - Left column: sticky profile card with pfp, handle, bio, and quick pills
-    - Right column (main): socials, player, badges, and other sections
-    - Footer at bottom with small credits.
-  -->
 
-  <div class="container" role="main" aria-labelledby="title">
-    <!-- ===== LEFT COLUMN: Profile ===== -->
-    <header class="profile" aria-label="Profile sidebar">
-      <section class="card profile-card" aria-labelledby="profile-name">
-        <!-- Profile picture -->
-        <div class="pfp-wrap" aria-hidden="false">
-          <!-- pfp.png is used as placeholder avatar -->
-          <img src="pfp.png" alt="Profile picture" width="140" height="140" />
-        </div>
-
-        <!-- Username and handle -->
-        <div>
-          <h1 id="profile-name" class="username">
-            Your Name
-            <span class="handle">@yourhandle</span>
-          </h1>
-        </div>
-
-        <!-- Short about/bio -->
-        <p class="bio" id="about">
-          Hello — I'm a creator focused on minimal design, music & digital craft. I like clean UI, well-made tooling, and small delightful details. Welcome to my links.
-        </p>
-
-        <!-- small quick pills -->
-        <div class="profile-quick" aria-hidden="false">
-          <div class="pill">Creator</div>
-          <div class="pill">Traveler</div>
-          <div class="pill">Maker</div>
-        </div>
-      </section>
-
-      <!-- small contact card or CTA -->
-      <section class="card" aria-label="Connect">
-        <div class="section-title">
-          <h2>Connect</h2>
-          <p>Fast links</p>
-        </div>
-
-        <nav class="socials" aria-label="Quick connect">
-          <!-- Example quick link - duplicates exist below but this card is for immediate access -->
-          <a class="social-link" href="https://example.com" target="_blank" rel="noopener" aria-label="Open example site in a new tab">
-            <div class="social-icon" role="img" aria-hidden="true">
-              <img src="home.png" alt="home icon" />
-              <div class="tooltip">Website</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Website</span>
-              <span class="desc">my personal site</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://spotify.com" target="_blank" rel="noopener" aria-label="Open Spotify in a new tab">
-            <div class="social-icon" role="img" aria-hidden="true">
-              <img src="spotify.png" alt="spotify icon" />
-              <div class="tooltip">Spotify</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Listen</span>
-              <span class="desc">Latest playlist</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://paypal.com" target="_blank" rel="noopener" aria-label="Open PayPal in a new tab">
-            <div class="social-icon" role="img" aria-hidden="true">
-              <img src="paypal.png" alt="paypal icon" />
-              <div class="tooltip">Paypal</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Support</span>
-              <span class="desc">Buy me a coffee</span>
-            </div>
-          </a>
-        </nav>
-      </section>
+    <!-- Header Image -->
+    <header>
+        <img src="head.png" alt="@zc Header">
     </header>
 
-    <!-- ===== RIGHT COLUMN: Main content ===== -->
-    <main aria-label="Main content">
-      <!-- Socials section (primary) -->
-      <section class="card" aria-labelledby="socials-title">
-        <div class="section-title">
-          <h2 id="socials-title">Socials</h2>
-          <p>Tap an icon to open in a new tab</p>
+    <!-- Profile Card -->
+    <section class="profile-card">
+        <img class="profile-pic" src="pfp.png" alt="Profile Picture">
+        <div class="username">@zc</div>
+        <div class="about">Just a simple bio link page with style.</div>
+
+        <!-- Social Links -->
+        <div class="social-links">
+            <a href="https://example.com" target="_blank">
+                <img src="artist.png" alt="Artist">
+                <span>Artist</span>
+            </a>
+            <a href="https://example.com" target="_blank">
+                <img src="bug.png" alt="Bug">
+                <span>Bug Hunter</span>
+            </a>
+            <a href="https://example.com" target="_blank">
+                <img src="dev.png" alt="Developer">
+                <span>Developer</span>
+            </a>
         </div>
+    </section>
 
-        <!-- The main grid of socials - uses your asset filenames -->
-        <div class="socials" role="list" aria-label="All social links">
-          <!-- Repeat pattern for each social. Each has an icon, tooltip, title and description. -->
-          <!-- The tooltip text is the social name; the anchor opens in a new tab. -->
-          <a class="social-link" href="https://open.spotify.com" target="_blank" rel="noopener" role="listitem" aria-label="Open Spotify">
-            <div class="social-icon" data-name="Spotify" tabindex="0">
-              <img src="spotify.png" alt="Spotify icon" />
-              <div class="tooltip" role="tooltip">Spotify</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Spotify</span>
-              <span class="desc">Music & playlists</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://paypal.com" target="_blank" rel="noopener" role="listitem" aria-label="Open PayPal">
-            <div class="social-icon" data-name="PayPal" tabindex="0">
-              <img src="paypal.png" alt="PayPal icon" />
-              <div class="tooltip" role="tooltip">PayPal</div>
-            </div>
-            <div class="social-label">
-              <span class="title">PayPal</span>
-              <span class="desc">Support / donations</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://yourstore.example" target="_blank" rel="noopener" role="listitem" aria-label="Open store">
-            <div class="social-icon" data-name="Store" tabindex="0">
-              <img src="store.png" alt="Store icon" />
-              <div class="tooltip">Store</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Store</span>
-              <span class="desc">Merch & prints</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://example.com/home" target="_blank" rel="noopener" role="listitem" aria-label="Open home">
-            <div class="social-icon" data-name="Home" tabindex="0">
-              <img src="home.png" alt="Home icon" />
-              <div class="tooltip">Home</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Home</span>
-              <span class="desc">Portfolio</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://example.com/world" target="_blank" rel="noopener" role="listitem" aria-label="Open world">
-            <div class="social-icon" data-name="World" tabindex="0">
-              <img src="world.png" alt="World icon" />
-              <div class="tooltip">World</div>
-            </div>
-            <div class="social-label">
-              <span class="title">World</span>
-              <span class="desc">Blog & travel</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://example.com/global" target="_blank" rel="noopener" role="listitem" aria-label="Open global">
-            <div class="social-icon" data-name="Global" tabindex="0">
-              <img src="global.png" alt="Global icon" />
-              <div class="tooltip">Global</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Global</span>
-              <span class="desc">International projects</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://example.com/icons" target="_blank" rel="noopener" role="listitem" aria-label="Open icons">
-            <div class="social-icon" data-name="Icons" tabindex="0">
-              <img src="icons.png" alt="Icons pack" />
-              <div class="tooltip">Icons</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Icons</span>
-              <span class="desc">Design assets</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://bitcoin.org" target="_blank" rel="noopener" role="listitem" aria-label="Open Bitcoin">
-            <div class="social-icon" data-name="Bitcoin" tabindex="0">
-              <img src="bitcoin.png" alt="bitcoin icon" />
-              <div class="tooltip">Bitcoin</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Bitcoin</span>
-              <span class="desc">Crypto donations</span>
-            </div>
-          </a>
-
-          <a class="social-link" href="https://ethereum.org" target="_blank" rel="noopener" role="listitem" aria-label="Open Ethereum">
-            <div class="social-icon" data-name="Ethereum" tabindex="0">
-              <img src="etherum.png" alt="ethereum icon" />
-              <div class="tooltip">Ethereum</div>
-            </div>
-            <div class="social-label">
-              <span class="title">Ethereum</span>
-              <span class="desc">Crypto donations</span>
-            </div>
-          </a>
+    <!-- Music Player -->
+    <section class="music-player">
+        <img src="artist.png" alt="Album Art" class="album-art">
+        <div class="song-info">
+            <div class="song-title">Sample Song</div>
+            <div class="song-artist">Sample Artist</div>
         </div>
-      </section>
-
-      <!-- Music player section -->
-      <section class="card" aria-labelledby="player-title">
-        <div class="section-title">
-          <h2 id="player-title">Music</h2>
-          <p>Custom player • click play</p>
+        <div class="controls">
+            <button id="play-pause">▶</button>
         </div>
-
-        <div class="player" role="application" aria-label="Music player">
-          <!-- album art -->
-          <div class="player-art" aria-hidden="false">
-            <img src="artist.png" alt="Album artwork" width="86" height="86" />
-          </div>
-
-          <!-- meta & controls -->
-          <div class="player-meta">
-            <div class="song-title" id="song-title">Song Name</div>
-            <div class="song-artist" id="song-artist">Artist • Album</div>
-
-            <!-- Controls and progress */
-            -->
-            <div class="controls">
-              <div class="controls-top">
-                <button class="btn play" id="play-pause" aria-pressed="false" aria-label="Play">
-                  <!-- SVG play icon -->
-                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M5 3v18l15-9z"></path>
-                  </svg>
-                </button>
-
-                <!-- small custom waveform just for decoration / animation -->
-                <div class="player-wave" aria-hidden="true">
-                  <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                </div>
-
-                <!-- Volume controls to the right -->
-                <div style="flex:1"></div>
-                <div class="volume" aria-label="Volume control">
-                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path fill="currentColor" d="M3 10v4h4l5 5V5L7 10H3z"></path>
-                  </svg>
-                  <input class="volume-range" type="range" min="0" max="1" step="0.01" value="0.9" aria-label="Volume slider" />
-                </div>
-              </div>
-
-              <div class="progress-bar-wrap">
-                <div class="time" id="current-time">0:00</div>
-                <input class="progress" id="progress" type="range" min="0" max="100" step="0.1" value="0" aria-label="Seek" />
-                <div class="time" id="duration">0:00</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Hidden native audio element - JavaScript wires custom controls -->
-          <audio id="audio" preload="auto" src="song.mp3"></audio>
+        <div class="progress-container" id="progress-container">
+            <div class="progress" id="progress"></div>
         </div>
-      </section>
-
-      <!-- Badges section -->
-      <section class="card" aria-labelledby="badges-title">
-        <div class="section-title">
-          <h2 id="badges-title">Badges</h2>
-          <p>Achievements & roles</p>
+        <div class="volume-container">
+            <label for="volume">🔊</label>
+            <input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.01" value="1">
         </div>
+        <audio id="audio" src="song.mp3"></audio>
+    </section>
 
-        <div class="badges" role="list">
-          <div class="badge" role="listitem" tabindex="0" aria-label="owner badge">
-            <img src="owner.png" alt="Owner badge" />
-            <div class="tooltip" role="tooltip">owner</div>
-          </div>
-
-          <div class="badge" role="listitem" tabindex="0" aria-label="developer badge">
-            <img src="dev.png" alt="Developer badge" />
-            <div class="tooltip" role="tooltip">dev</div>
-          </div>
-
-          <div class="badge" role="listitem" tabindex="0" aria-label="artist badge">
-            <img src="artist.png" alt="Artist badge" />
-            <div class="tooltip" role="tooltip">artist</div>
-          </div>
-
-          <div class="badge" role="listitem" tabindex="0" aria-label="premium badge">
-            <img src="premium.png" alt="Premium badge" />
-            <div class="tooltip" role="tooltip">premium</div>
-          </div>
-
-          <div class="badge" role="listitem" tabindex="0" aria-label="bug hunter badge">
-            <img src="bug.png" alt="Bug badge" />
-            <div class="tooltip" role="tooltip">bug hunter</div>
-          </div>
-
-          <div class="badge" role="listitem" tabindex="0" aria-label="verified badge">
-            <img src="verified.png" alt="Verified badge" />
-            <div class="tooltip" role="tooltip">verified</div>
-          </div>
+    <!-- Badges -->
+    <section class="badges">
+        <div class="badge">
+            <img src="owner.png" alt="Owner">
+            <span>Owner</span>
         </div>
-
-      </section>
-
-      <!-- Extra section for links, newsletter or info -->
-      <section class="card" aria-labelledby="more-title">
-        <div class="section-title">
-          <h2 id="more-title">More</h2>
-          <p>Other things you might like</p>
+        <div class="badge">
+            <img src="dev.png" alt="Developer">
+            <span>Developer</span>
         </div>
-
-        <div class="stack" style="flex-direction:column; gap:12px;">
-          <a class="social-link" href="https://example.com/blog" target="_blank" rel="noopener">
-            <div class="social-icon">
-              <img src="world.png" alt="blog" />
-              <div class="tooltip">Blog</div>
-            </div>
-            <div class="social-label"><span class="title">Blog</span><span class="desc">Thoughts & articles</span></div>
-          </a>
-
-          <a class="social-link" href="https://example.com/contact" target="_blank" rel="noopener">
-            <div class="social-icon">
-              <img src="home.png" alt="contact" />
-              <div class="tooltip">Contact</div>
-            </div>
-            <div class="social-label"><span class="title">Contact</span><span class="desc">Work enquiries</span></div>
-          </a>
+        <div class="badge">
+            <img src="artist.png" alt="Artist">
+            <span>Artist</span>
         </div>
-      </section>
-
-      <!-- Footer -->
-      <footer class="card" aria-label="Footer">
-        <div>
-          <small>Made with care • Minimal biolink • Customize freely</small>
+        <div class="badge">
+            <img src="premium.png" alt="Premium">
+            <span>Premium</span>
         </div>
-      </footer>
-    </main>
-  </div>
+        <div class="badge">
+            <img src="bug.png" alt="Bug Hunter">
+            <span>Bug Hunter</span>
+        </div>
+        <div class="badge">
+            <img src="verified.png" alt="Verified">
+            <span>Verified</span>
+        </div>
+    </section>
 
-  <!--
-    JavaScript: minimal, modern, and accessible.
-    - Handles: social tooltips toggling for keyboard users, custom audio player control,
-      progress sync, seeking, volume control, play/pause toggling, and time formatting.
-    - No external libs. Works offline with local assets.
-  -->
-  <script>
-    (function(){
-      'use strict';
+    <script>
+        const playPauseBtn = document.getElementById('play-pause');
+        const audio = document.getElementById('audio');
+        const progress = document.getElementById('progress');
+        const progressContainer = document.getElementById('progress-container');
+        const volumeSlider = document.getElementById('volume');
 
-      /* ---------------------------
-         Helper utilities
-         --------------------------- */
+        let isPlaying = false;
 
-      function q(sel, ctx=document) { return ctx.querySelector(sel); }
-      function qAll(sel, ctx=document) { return Array.from(ctx.querySelectorAll(sel)); }
-      function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-      function fmtTime(seconds) {
-        if (!isFinite(seconds) || isNaN(seconds)) return '0:00';
-        var s = Math.floor(seconds % 60);
-        var m = Math.floor((seconds / 60) % 60);
-        return m + ':' + (s < 10 ? '0' + s : s);
-      }
-
-      /* ---------------------------
-         Social tooltip accessibility
-         --------------------------- */
-      // Show tooltip on focus and keyboard navigation for each social-icon,
-      // also support mouse hover (CSS handles hover), but we add aria-friendly
-      // toggles for screen readers and keyboard users.
-      var socialIcons = qAll('.social-icon');
-
-      socialIcons.forEach(function(icon){
-        // allow keyboard focus on the icon container
-        if (!icon.hasAttribute('tabindex')) icon.setAttribute('tabindex','0');
-
-        // When focusing, set attribute data-show to true to animate tooltip
-        icon.addEventListener('focus', function(){
-          icon.setAttribute('data-show','true');
-        });
-        icon.addEventListener('blur', function(){ icon.removeAttribute('data-show'); });
-
-        // Also respond to keyboard "Enter" or "Space" to activate the parent link
-        icon.addEventListener('keydown', function(e){
-          if (e.key === 'Enter' || e.key === ' ') {
-            var parent = icon.closest('a');
-            if (parent) {
-              // open in new tab - consistent behavior with click
-              window.open(parent.href, '_blank', 'noopener');
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                playPauseBtn.textContent = '▶';
+            } else {
+                audio.play();
+                playPauseBtn.textContent = '⏸';
             }
-            e.preventDefault();
-          }
+            isPlaying = !isPlaying;
         });
-      });
 
-      /* ---------------------------
-         Music player functionality
-         --------------------------- */
-      var audio = q('#audio');
-      var playBtn = q('#play-pause');
-      var progress = q('#progress');
-      var currentTimeEl = q('#current-time');
-      var durationEl = q('#duration');
-      var volumeRange = q('.volume-range');
-      var songTitleEl = q('#song-title');
-      var songArtistEl = q('#song-artist');
-      var albumArt = q('.player-art img');
+        audio.addEventListener('timeupdate', () => {
+            const progressPercent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = `${progressPercent}%`;
+        });
 
-      // If the audio has metadata, populate duration; else wait for loadedmetadata
-      function initPlayer() {
-        // Attempt to set duration display
-        if (audio.readyState >= 1 && !isNaN(audio.duration)) {
-          durationEl.textContent = fmtTime(audio.duration);
-          progress.max = audio.duration;
-        } else {
-          durationEl.textContent = '0:00';
-        }
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audio.duration;
+            audio.currentTime = (clickX / width) * duration;
+        });
 
-        // Set initial volume from control
-        audio.volume = parseFloat(volumeRange.value) || 0.9;
-
-        // Optionally, set song title & artist if available in dataset or ID3 (ID3 not parsed here)
-        // Keep defaults, but allow easy edit:
-        if (audio.dataset.title) songTitleEl.textContent = audio.dataset.title;
-        if (audio.dataset.artist) songArtistEl.textContent = audio.dataset.artist;
-
-        // Keep progress correct if audio is already playing
-        updateProgress();
-      }
-
-      // Play / Pause toggle
-      function togglePlay() {
-        if (audio.paused) {
-          audio.play();
-          playBtn.setAttribute('aria-pressed','true');
-          // Update icon to pause
-          playBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>';
-          playBtn.setAttribute('aria-label','Pause');
-        } else {
-          audio.pause();
-          playBtn.setAttribute('aria-pressed','false');
-          // Update icon to play
-          playBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v18l15-9z"></path></svg>';
-          playBtn.setAttribute('aria-label','Play');
-        }
-      }
-
-      // Update progress bar and time labels
-      function updateProgress() {
-        // protect against not having duration yet
-        var cur = audio.currentTime || 0;
-        var dur = audio.duration || 0;
-        // If using progress input where max is time
-        if (progress) {
-          progress.value = cur;
-          if (!progress.max || progress.max === "100") {
-            // set an appropriate max if not set
-            progress.max = isFinite(dur) && dur > 0 ? dur : 0;
-          }
-        }
-        currentTimeEl.textContent = fmtTime(cur);
-        durationEl.textContent = isFinite(dur) && dur > 0 ? fmtTime(dur) : '0:00';
-      }
-
-      // Seek audio to the progress value
-      function seekTo(value) {
-        var t = parseFloat(value);
-        if (!isNaN(t) && isFinite(t)) {
-          audio.currentTime = t;
-        }
-      }
-
-      // Attach event listeners
-      playBtn.addEventListener('click', function(){ togglePlay(); });
-
-      // When audio plays/pauses (e.g., due to OS controls), update the UI:
-      audio.addEventListener('play', function(){
-        playBtn.setAttribute('aria-pressed','true');
-        playBtn.setAttribute('aria-label','Pause');
-        playBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>';
-      });
-      audio.addEventListener('pause', function(){
-        playBtn.setAttribute('aria-pressed','false');
-        playBtn.setAttribute('aria-label','Play');
-        playBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3v18l15-9z"></path></svg>';
-      });
-
-      // Sync progress while playing
-      audio.addEventListener('timeupdate', updateProgress);
-      audio.addEventListener('loadedmetadata', function(){
-        progress.max = audio.duration;
-        durationEl.textContent = fmtTime(audio.duration);
-      });
-
-      // Seek while dragging the range (supports mouse & touch)
-      var isScrubbing = false;
-      progress.addEventListener('input', function(e){
-        // While dragging, update current time display but do not always set audio currentTime on input to reduce jumps.
-        // We'll set it on change or when mouseup.
-        var value = parseFloat(e.target.value);
-        currentTimeEl.textContent = fmtTime(value);
-      });
-
-      progress.addEventListener('change', function(e){
-        seekTo(e.target.value);
-      });
-
-      // On mousedown/touchstart, mark scrubbing; on mouseup finalize
-      progress.addEventListener('mousedown', function(){ isScrubbing = true; });
-      progress.addEventListener('mouseup', function(e){ isScrubbing = false; seekTo(e.target.value); });
-      progress.addEventListener('touchend', function(e){ isScrubbing = false; seekTo(e.target.value); });
-
-      // Volume control
-      volumeRange.addEventListener('input', function(e){
-        var val = parseFloat(e.target.value);
-        audio.volume = clamp(val, 0, 1);
-      });
-
-      // Keyboard shortcuts: Space toggles play/pause when focused on player (document-level)
-      document.addEventListener('keydown', function(e){
-        // Avoid interfering when typing
-        if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) return;
-        if (e.code === 'Space') {
-          // Prevent page scrolling
-          e.preventDefault();
-          togglePlay();
-        }
-        // Up / Down to adjust volume
-        if (e.code === 'ArrowUp') {
-          e.preventDefault();
-          var v = clamp(audio.volume + 0.05, 0, 1);
-          audio.volume = v;
-          volumeRange.value = v;
-        }
-        if (e.code === 'ArrowDown') {
-          e.preventDefault();
-          var v = clamp(audio.volume - 0.05, 0, 1);
-          audio.volume = v;
-          volumeRange.value = v;
-        }
-        // Left / Right to skip
-        if (e.code === 'ArrowLeft') {
-          e.preventDefault();
-          audio.currentTime = Math.max(0, audio.currentTime - 5);
-        }
-        if (e.code === 'ArrowRight') {
-          e.preventDefault();
-          audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 5);
-        }
-      });
-
-      // Basic error handling: if source fails to load, show message in artist/title
-      audio.addEventListener('error', function(){
-        songTitleEl.textContent = 'Audio failed to load';
-        songArtistEl.textContent = 'Check song.mp3 in same folder';
-      });
-
-      // Initialize UI
-      initPlayer();
-
-      /* ---------------------------
-         Tiny enhancement: animate badges tooltips on focus
-         --------------------------- */
-      var badges = qAll('.badge');
-      badges.forEach(function(b){
-        b.addEventListener('focus', function(){ var t = b.querySelector('.tooltip'); if (t) t.style.opacity = '1'; });
-        b.addEventListener('blur', function(){ var t = b.querySelector('.tooltip'); if (t) t.style.opacity = ''; });
-      });
-
-      /* End of IIFE */
-    })();
-  </script>
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+    </script>
 </body>
 </html>
