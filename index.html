@@ -275,6 +275,7 @@
   cursor: pointer;
   z-index: 2;
   touch-action: none;     /* steadier pointer behavior on trackpads/touch */
+  opacity: 0;
 }
 
 /* Ensure the container is the right size and not clipping the thumb weirdly */
@@ -286,6 +287,7 @@
   /* If you notice clipping, try overflow: visible; 
      but with aligned track height we can keep it hidden */
   overflow: hidden;
+  opacity: 0;
 }
 
 /* Style the WebKit/Blink track so Chrome knows its height */
@@ -294,6 +296,7 @@
   height: 12px;
   background: transparent;     /* we’re showing your .progress underneath */
   border-radius: 999px;
+  opacity: 0;
 }
 
 /* Style the thumb (already close to yours) */
@@ -307,6 +310,7 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   border: 2px solid rgba(0,0,0,0.2);
   margin-top: 0;                 /* aligns with 12px track height */
+  opacity: 0;
 }
 
 /* Firefox */
@@ -315,6 +319,7 @@
   height: 12px;
   background: transparent;
   border: none;
+  opacity: 0;
 }
 
 .seek input[type=range]::-moz-range-thumb,
@@ -325,6 +330,7 @@
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   border: 2px solid rgba(0,0,0,0.2);
+  opacity: 0;
 }
 
 /* Edge/legacy (optional) */
@@ -334,6 +340,7 @@
   background: transparent;
   border-color: transparent;
   color: transparent;
+  opacity: 0;
 }
 .seek input[type=range]::-ms-thumb,
 .volume input[type=range]::-ms-thumb {
@@ -343,6 +350,7 @@
   background: #fff;
   border: 2px solid rgba(0,0,0,0.2);
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  opacity: 0;
 }
     .time {
       min-width: 82px;
