@@ -405,77 +405,97 @@
     </div>
   </div>
 
-  <script>
-    const audio = document.getElementById('audio');
-    const seekRange = document.getElementById('seekRange');
-    const progress = document.getElementById('progress');
-    const timeDisplay = document.getElementById('timeDisplay');
-    const vol = document.getElementById('vol');
-    const volProgress = document.getElementById('volProgress');
-    const playPauseBtn = document.getElementById('playPause');
+<script>
+  const audio = document.getElementById('audio');
+  const seekRange = document.getElementById('seekRange');
+  const progress = document.getElementById('progress');
+  const timeDisplay = document.getElementById('timeDisplay');
+  const vol = document.getElementById('vol');
+  const volProgress = document.getElementById('volProgress');
+  const playPauseBtn = document.getElementById('playPause');
 
-    // Format seconds to M:SS
-    function formatTime(seconds) {
-      if (!isFinite(seconds)) return '0:00';
-      const m = Math.floor(seconds / 60);
-      const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-      return `${m}:${s}`;
+  let isSeeking = false;
+
+  // Format seconds to M:SS
+  function formatTime(seconds) {
+    if (!isFinite(seconds)) return '0:00';
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  // Update time and progress bar as audio plays (if not seeking)
+  audio.addEventListener('timeupdate', () => {
+    if (audio.duration && !isSeeking) {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = `${pct}%`;
+      seekRange.value = pct;
+      timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
     }
+  });
 
-    // Update time and progress bar as audio plays
-    audio.addEventListener('timeupdate', () => {
-      if (audio.duration) {
-        const pct = (audio.currentTime / audio.duration) * 100;
-        progress.style.width = `${pct}%`;
-        seekRange.value = pct;
-        timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-      }
-    });
+  // Initialize time display when metadata is loaded
+  audio.addEventListener('loadedmetadata', () => {
+    timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
+    seekRange.value = 0;
+    progress.style.width = '0%';
+  });
 
-    // Initialize time display when metadata is loaded
-    audio.addEventListener('loadedmetadata', () => {
-      timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
-      seekRange.value = 0;
-      progress.style.width = '0%';
-    });
+  // User starts dragging the seekbar
+  seekRange.addEventListener('mousedown', () => {
+    isSeeking = true;
+  });
+  seekRange.addEventListener('touchstart', () => {
+    isSeeking = true;
+  });
 
-    // Seek audio when user drags the slider
-    seekRange.addEventListener('input', (e) => {
-      if (audio.duration) {
-        const pct = e.target.value;
-        progress.style.width = `${pct}%`;
-        audio.currentTime = (pct / 100) * audio.duration;
-      }
-    });
+  // User drags the seekbar - update progress bar visually
+  seekRange.addEventListener('input', (e) => {
+    const pct = e.target.value;
+    progress.style.width = `${pct}%`;
+    timeDisplay.textContent = `${formatTime((pct / 100) * audio.duration)} / ${formatTime(audio.duration)}`;
+  });
 
-    // Volume control
-    vol.addEventListener('input', e => {
-      audio.volume = e.target.value;
-      volProgress.style.width = (e.target.value * 100) + '%';
-    });
+  // User releases the seekbar - update audio currentTime
+  function seekToPosition(e) {
+    if (audio.duration) {
+      const pct = e.target.value;
+      audio.currentTime = (pct / 100) * audio.duration;
+    }
+    isSeeking = false;
+  }
+  seekRange.addEventListener('mouseup', seekToPosition);
+  seekRange.addEventListener('touchend', seekToPosition);
 
-    // Play/pause toggle
-    playPauseBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Pause icon
-      } else {
-        audio.pause();
-        playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play icon
-      }
-    });
+  // Volume control
+  vol.addEventListener('input', e => {
+    audio.volume = e.target.value;
+    volProgress.style.width = (e.target.value * 100) + '%';
+  });
 
-    // Reset play/pause button when audio ends
-    audio.addEventListener('ended', () => {
+  // Play/pause toggle
+  playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Pause icon
+    } else {
+      audio.pause();
       playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play icon
-      seekRange.value = 0;
-      progress.style.width = '0%';
-      timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
-    });
+    }
+  });
 
-    // Set initial volume UI and audio volume
-    audio.volume = vol.value;
-    volProgress.style.width = (vol.value * 100) + '%';
-  </script>
+  // Reset play/pause button when audio ends
+  audio.addEventListener('ended', () => {
+    playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play icon
+    seekRange.value = 0;
+    progress.style.width = '0%';
+    timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
+  });
+
+  // Set initial volume UI and audio volume
+  audio.volume = vol.value;
+  volProgress.style.width = (vol.value * 100) + '%';
+</script>
+
 </body>
 </html>
