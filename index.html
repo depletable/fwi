@@ -424,7 +424,7 @@
     return `${m}:${s}`;
   }
 
-  // Update time and progress bar as audio plays (if not seeking)
+  // Update time and progress bar as audio plays (only if NOT seeking)
   audio.addEventListener('timeupdate', () => {
     if (audio.duration && !isSeeking) {
       const pct = (audio.currentTime / audio.duration) * 100;
@@ -441,31 +441,29 @@
     progress.style.width = '0%';
   });
 
-  // User starts dragging the seekbar
-  seekRange.addEventListener('mousedown', () => {
-    isSeeking = true;
-  });
-  seekRange.addEventListener('touchstart', () => {
+  // Pointer events for better drag detection (works for mouse & touch)
+  seekRange.addEventListener('pointerdown', () => {
     isSeeking = true;
   });
 
-  // User drags the seekbar - update progress bar visually
-  seekRange.addEventListener('input', (e) => {
-    const pct = e.target.value;
-    progress.style.width = `${pct}%`;
-    timeDisplay.textContent = `${formatTime((pct / 100) * audio.duration)} / ${formatTime(audio.duration)}`;
-  });
-
-  // User releases the seekbar - update audio currentTime
-  function seekToPosition(e) {
+  seekRange.addEventListener('pointerup', (e) => {
+    isSeeking = false;
+    // Set audio currentTime immediately on drag end
     if (audio.duration) {
       const pct = e.target.value;
       audio.currentTime = (pct / 100) * audio.duration;
     }
-    isSeeking = false;
-  }
-  seekRange.addEventListener('mouseup', seekToPosition);
-  seekRange.addEventListener('touchend', seekToPosition);
+  });
+
+  // When user drags the slider, update progress bar AND audio.currentTime immediately
+  seekRange.addEventListener('input', (e) => {
+    if (audio.duration) {
+      const pct = e.target.value;
+      progress.style.width = `${pct}%`;
+      audio.currentTime = (pct / 100) * audio.duration;
+      timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+    }
+  });
 
   // Volume control
   vol.addEventListener('input', e => {
@@ -496,6 +494,5 @@
   audio.volume = vol.value;
   volProgress.style.width = (vol.value * 100) + '%';
 </script>
-
 </body>
 </html>
