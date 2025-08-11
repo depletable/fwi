@@ -24,6 +24,8 @@
       --container-max-w: 650px;
       --profile-padding: 18px;
       --pfp-size: 78px;
+      --track-height: 8px;
+      --thumb-size: 12px;
     }
 
     html, body {
@@ -75,7 +77,6 @@
       overflow: hidden;
       flex-shrink: 0;
     }
-
     .pfp-wrap img {
       width: 100%;
       height: 100%;
@@ -88,14 +89,12 @@
       flex-wrap: wrap;
       align-items: center;
     }
-
     .display-name {
       font-weight: 700;
       font-size: 26px;
       margin: 0;
       color: var(--accent-color);
     }
-
     .badges {
       display: flex;
       gap: 3px;
@@ -104,7 +103,6 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
-
     .badge {
       width: 22px;
       height: 22px;
@@ -112,7 +110,6 @@
       place-items: center;
       position: relative;
     }
-
     .badge img {
       width: 16px;
       height: 16px;
@@ -129,7 +126,6 @@
       gap: 3px;
       justify-content: center;
     }
-
     .social {
       width: 48px;
       height: 48px;
@@ -137,7 +133,6 @@
       place-items: center;
       position: relative;
     }
-
     .social img {
       width: 24px;
       height: 24px;
@@ -148,7 +143,6 @@
       opacity: 1;
       transform: translate(-50%, -6px) scale(1);
     }
-
     .badge::after,
     .social::after {
       content: attr(data-tooltip);
@@ -166,7 +160,6 @@
       white-space: nowrap;
       margin-bottom: 6px;
     }
-
     .badge::before,
     .social::before {
       content: '';
@@ -179,7 +172,6 @@
       border-bottom-color: rgba(0, 0, 0, 0.75);
       opacity: 0;
     }
-
     .badge[data-tooltip]:hover::before,
     .social[data-tooltip]:hover::before {
       opacity: 1;
@@ -189,7 +181,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      width: calc(var(--container-max-w) - 0px);
+      width: 100%;
       padding: 12px 16px;
       border-radius: 12px;
       background: rgba(var(--card-bg-color), var(--card-bg-opacity));
@@ -197,7 +189,6 @@
       backdrop-filter: blur(calc(var(--glass-blur) - 2px));
       box-sizing: border-box;
     }
-
     .album {
       width: 58px;
       height: 58px;
@@ -205,7 +196,6 @@
       overflow: hidden;
       flex: 0 0 58px;
     }
-
     .album img {
       width: 100%;
       height: 100%;
@@ -218,133 +208,64 @@
       gap: 6px;
       flex: 1;
     }
-
     .song-title {
       font-weight: 600;
       color: var(--accent-color);
       font-size: 14px;
     }
-
     .song-artist {
       font-size: 13px;
       color: var(--muted-color);
     }
 
-    .seekbar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      width: 100%;
-    }
-
+    /* Shared seek & volume slider styles */
     .seek {
       position: relative;
-      height: 12px;
+      height: var(--track-height);
       background: rgba(255, 255, 255, 0.04);
       border-radius: 999px;
       overflow: hidden;
-      flex: 1;
     }
-
-    .seek > .progress,
-    .volume .seek > .progress {
+    .seek .progress {
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
+      left: 0; top: 0; bottom: 0;
       width: 0%;
       background: var(--accent-color);
-      border-radius: 999px;
-      z-index: 0;
+      border-radius: inherit;
       pointer-events: none;
     }
+    .seek input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      margin: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    /* Invisible but draggable thumb */
+    .seek input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      background: transparent;
+      border: none;
+    }
+    .seek input[type=range]::-moz-range-thumb {
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      background: transparent;
+      border: none;
+    }
+    .seek input[type=range]::-webkit-slider-runnable-track,
+    .seek input[type=range]::-moz-range-track {
+      height: var(--track-height);
+      background: transparent;
+    }
 
- /* Make the input fill the track reliably and be hit-testable */
-.seek input[type=range],
-.volume input[type=range] {
-  -webkit-appearance: none;
-  appearance: none;
-  position: absolute;     /* fill the .seek box */
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  background: transparent;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  z-index: 2;
-  touch-action: none;     /* steadier pointer behavior on trackpads/touch */
-}
-
-/* Ensure the container is the right size and not clipping the thumb weirdly */
-.seek {
-  position: relative;
-  height: 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  /* If you notice clipping, try overflow: visible; 
-     but with aligned track height we can keep it hidden */
-  overflow: hidden;
-}
-
-/* Style the WebKit/Blink track so Chrome knows its height */
-.seek input[type=range]::-webkit-slider-runnable-track,
-.volume input[type=range]::-webkit-slider-runnable-track {
-  height: 12px;
-  background: transparent;     /* we’re showing your .progress underneath */
-  border-radius: 999px;
-}
-
-/* Style the thumb (already close to yours) */
-.seek input[type=range]::-webkit-slider-thumb,
-.volume input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  border: 2px solid rgba(0,0,0,0.2);
-  margin-top: 0;                 /* aligns with 12px track height */
-}
-
-/* Firefox */
-.seek input[type=range]::-moz-range-track,
-.volume input[type=range]::-moz-range-track {
-  height: 12px;
-  background: transparent;
-  border: none;
-}
-
-.seek input[type=range]::-moz-range-thumb,
-.volume input[type=range]::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  border: 2px solid rgba(0,0,0,0.2);
-}
-
-/* Edge/legacy (optional) */
-.seek input[type=range]::-ms-track,
-.volume input[type=range]::-ms-track {
-  height: 12px;
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-.seek input[type=range]::-ms-thumb,
-.volume input[type=range]::-ms-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid rgba(0,0,0,0.2);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  opacity: 0;
-}
     .time {
       min-width: 82px;
       text-align: right;
@@ -358,7 +279,6 @@
       align-items: center;
       width: 120px;
     }
-
     .volume .seek {
       flex: 1;
     }
@@ -368,7 +288,6 @@
       align-items: center;
       gap: 8px;
     }
-
     .controls button {
       background: none;
       border: none;
@@ -384,7 +303,6 @@
       justify-content: center;
       transition: background 0.2s ease;
     }
-
     .controls button::before {
       content: '';
       position: absolute;
@@ -394,11 +312,9 @@
       transition: background 0.3s ease;
       z-index: 0;
     }
-
     .controls button:hover::before {
       background: rgba(255, 255, 255, 0.15);
     }
-
     .controls svg {
       width: 20px;
       height: 20px;
@@ -474,50 +390,33 @@
   const vol = document.getElementById('vol');
   const volProgress = document.getElementById('volProgress');
   const playPauseBtn = document.getElementById('playPause');
-
   let isSeeking = false;
 
-  // Format seconds to M:SS
-  function formatTime(seconds) {
-    if (!isFinite(seconds)) return '0:00';
-    const m = Math.floor(seconds / 60);
-    const s = Math.floor(seconds % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
-  }
+  const formatTime = s => {
+    if (!isFinite(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  };
 
-  // Update time and progress bar as audio plays (only if NOT seeking)
+  const updateProgressUI = () => {
+    const pct = (audio.currentTime / audio.duration) * 100;
+    progress.style.width = `${pct}%`;
+    seekRange.value = pct;
+    timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+  };
+
   audio.addEventListener('timeupdate', () => {
-    if (audio.duration && !isSeeking) {
-      const pct = (audio.currentTime / audio.duration) * 100;
-      progress.style.width = `${pct}%`;
-      seekRange.value = pct;
-      timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
-    }
+    if (!isSeeking) updateProgressUI();
   });
 
-  // Initialize time display when metadata is loaded
   audio.addEventListener('loadedmetadata', () => {
     timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
-    seekRange.value = 0;
-    progress.style.width = '0%';
   });
 
-  // Pointer events for better drag detection (works for mouse & touch)
-  seekRange.addEventListener('pointerdown', () => {
-    isSeeking = true;
-  });
+  seekRange.addEventListener('pointerdown', () => isSeeking = true);
 
-  seekRange.addEventListener('pointerup', (e) => {
-    isSeeking = false;
-    // Set audio currentTime immediately on drag end
-    if (audio.duration) {
-      const pct = e.target.value;
-      audio.currentTime = (pct / 100) * audio.duration;
-    }
-  });
-
-  // When user drags the slider, update progress bar AND audio.currentTime immediately
-  seekRange.addEventListener('input', (e) => {
+  seekRange.addEventListener('input', e => {
     if (audio.duration) {
       const pct = e.target.value;
       progress.style.width = `${pct}%`;
@@ -526,34 +425,38 @@
     }
   });
 
-  // Volume control
-  vol.addEventListener('input', e => {
-    audio.volume = e.target.value;
-    volProgress.style.width = (e.target.value * 100) + '%';
+  seekRange.addEventListener('pointerup', e => {
+    isSeeking = false;
+    if (audio.duration) {
+      audio.currentTime = (e.target.value / 100) * audio.duration;
+      if (audio.paused) audio.play();
+    }
   });
 
-  // Play/pause toggle
+  vol.addEventListener('input', e => {
+    audio.volume = e.target.value;
+    volProgress.style.width = `${e.target.value * 100}%`;
+  });
+
   playPauseBtn.addEventListener('click', () => {
     if (audio.paused) {
       audio.play();
-      playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Pause icon
+      playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
     } else {
       audio.pause();
-      playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play icon
+      playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     }
   });
 
-  // Reset play/pause button when audio ends
   audio.addEventListener('ended', () => {
-    playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Play icon
+    playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
     seekRange.value = 0;
     progress.style.width = '0%';
     timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
   });
 
-  // Set initial volume UI and audio volume
   audio.volume = vol.value;
-  volProgress.style.width = (vol.value * 100) + '%';
+  volProgress.style.width = `${vol.value * 100}%`;
 </script>
 </body>
 </html>
