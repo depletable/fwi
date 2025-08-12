@@ -42,11 +42,12 @@
     }
 
     .wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 20px;
+      height: 100vh;        /* full viewport height */
+  display: flex;
+  align-items: center;  /* vertical centering */
+  justify-content: center; /* horizontal centering */
+  padding: 0 20px;      /* remove top/bottom padding to avoid shifting */
+  box-sizing: border-box;
     }
 
     .profile-section {
