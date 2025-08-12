@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>@kzx.</title>
 
-  <link rel="icon" href="head.png" type="image/png" />
+  <!-- Updated favicon link -->
+  <link rel="icon" href="head.png">
+
   <!-- Inter + DM Sans Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -31,10 +33,12 @@
 
     html, body {
       margin: 0;
+      padding: 0;
       height: 100%;
       font-family: 'Inter', system-ui;
       background: var(--bg-color);
       color: #fff;
+      overflow: hidden; /* disables scrolling */
     }
 
     .wrap {
@@ -105,7 +109,7 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.15);
       margin-top: 10px;
-      margin-bottom: -5px:
+      margin-bottom: -5px;
     }
     .badge {
       width: 22px;
@@ -119,7 +123,6 @@
       height: 16px;
     }
 
-    /* Updated bio style */
     .bio {
       font-family: 'DM Sans', sans-serif;
       font-size: 18px;
@@ -234,7 +237,6 @@
       color: var(--muted-color);
     }
 
-    /* Shared seek & volume slider styles */
     .seek {
       position: relative;
       height: var(--track-height);
@@ -262,32 +264,30 @@
       cursor: pointer;
       z-index: 2;
     }
-    /* Invisible but draggable thumb */
-    .seek input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: var(--thumb-size);
-      height: var(--thumb-size);
-      background: transparent;
-      border: none;
-    }
+    .seek input[type=range]::-webkit-slider-thumb,
     .seek input[type=range]::-moz-range-thumb {
       width: var(--thumb-size);
       height: var(--thumb-size);
       background: transparent;
       border: none;
     }
+
     .seek input[type=range]::-webkit-slider-runnable-track,
     .seek input[type=range]::-moz-range-track {
       height: var(--track-height);
       background: transparent;
     }
 
+    .bottom-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
     .time {
-      min-width: 82px;
-      text-align: right;
       font-size: 13px;
       color: var(--muted-color);
-      margin-top: 25px;
     }
 
     .volume {
@@ -295,7 +295,6 @@
       gap: 8px;
       align-items: center;
       width: 120px;
-      margin-top: -20px;
     }
     .volume .seek {
       flex: 1;
@@ -386,11 +385,13 @@
               <div class="progress" id="progress"></div>
               <input id="seekRange" type="range" min="0" max="100" value="0" />
             </div>
-            <div class="time" id="timeDisplay">0:00 / 0:00</div>
-            <div class="volume">
-              <div class="seek">
-                <div class="progress" id="volProgress" style="width:80%;"></div>
-                <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8" />
+            <div class="bottom-controls">
+              <div class="time" id="timeDisplay">0:00 / 0:00</div>
+              <div class="volume">
+                <div class="seek">
+                  <div class="progress" id="volProgress" style="width:80%;"></div>
+                  <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8" />
+                </div>
               </div>
             </div>
           </div>
