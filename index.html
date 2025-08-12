@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>@kzx</title>
+  <title>@zc</title>
 
   <link rel="icon" href="head.png" type="image/png" />
-  <!-- Inter + DM Sans Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=DM+Sans&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -35,14 +34,18 @@
       font-family: 'Inter', system-ui;
       background: var(--bg-color);
       color: #fff;
+      overflow: hidden; /* prevent scrolling */
     }
 
     .wrap {
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      padding: 48px 20px;
+      align-items: center;
+      gap: 32px;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .profile-section {
@@ -63,12 +66,16 @@
       backdrop-filter: blur(var(--glass-blur));
       border: var(--card-border-width) solid rgba(var(--card-border-color), var(--card-border-opacity));
       box-sizing: border-box;
+      align-items: center; /* center horizontally */
+      text-align: center;
     }
 
     .profile-top {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 6px; /* tighten gap */
+      margin-bottom: 6px; /* reduce space below */
     }
 
     .pfp-wrap {
@@ -77,6 +84,7 @@
       border-radius: 50%;
       overflow: hidden;
       flex-shrink: 0;
+      margin-bottom: 10px; /* spacing below profile pic */
     }
     .pfp-wrap img {
       width: 100%;
@@ -86,15 +94,18 @@
 
     .name-and-badges {
       display: flex;
+      justify-content: center;
       gap: 8px;
       flex-wrap: wrap;
       align-items: center;
+      margin-bottom: 4px; /* closer to bio */
     }
     .display-name {
       font-weight: 700;
       font-size: 26px;
       margin: 0;
       color: var(--accent-color);
+      font-family: 'Inter', sans-serif;
     }
     .badges {
       display: flex;
@@ -103,6 +114,7 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.15);
+      align-items: center;
     }
     .badge {
       width: 22px;
@@ -116,85 +128,60 @@
       height: 16px;
     }
 
-    /* Updated bio style */
     .bio {
+      color: var(--bio-color);
+      font-size: 21px;
+      line-height: 1.35;
       font-family: 'DM Sans', sans-serif;
-      font-size: 17px;
-      font-weight: 500;
-      background: linear-gradient(270deg, #ff6ec4, #7873f5, #4ade80, #facc15);
-      background-size: 600% 600%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientMove 8s ease infinite;
+      min-height: 28px; /* to avoid jump while switching bios */
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--bio-color);
+      width: fit-content;
+      margin: 0 auto;
+      /* For typewriter effect cursor */
+      animation: blink-caret 0.75s step-end infinite;
     }
 
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
     }
 
+    .bio span {
+      display: inline-block;
+      animation-timing-function: steps(22, end);
+      white-space: nowrap;
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+
+    /* Social icons */
     .socials {
       display: flex;
       gap: 3px;
       justify-content: center;
+      margin-top: 10px;
     }
     .social {
-      width: 48px;
-      height: 48px;
+      width: 58px; /* increased by 20% from 48px */
+      height: 58px;
       display: inline-grid;
       place-items: center;
       position: relative;
     }
     .social img {
-      width: 24px;
-      height: 24px;
+      width: 28.8px; /* 24 * 1.2 */
+      height: 28.8px;
     }
 
-    .badge[data-tooltip]:hover::after,
-    .social[data-tooltip]:hover::after {
-      opacity: 1;
-      transform: translate(-50%, -6px) scale(1);
-    }
-    .badge::after,
-    .social::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translate(-50%, 0) scale(.98);
-      background: rgba(0, 0, 0, 0.75);
-      color: #fff;
-      font-size: 12px;
-      padding: 6px 9px;
-      border-radius: 8px;
-      opacity: 0;
-      transition: all .18s ease;
-      white-space: nowrap;
-      margin-bottom: 6px;
-    }
-    .badge::before,
-    .social::before {
-      content: '';
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 6px solid transparent;
-      border-top: none;
-      border-bottom-color: rgba(0, 0, 0, 0.75);
-      opacity: 0;
-    }
-    .badge[data-tooltip]:hover::before,
-    .social[data-tooltip]:hover::before {
-      opacity: 1;
-    }
-
+    /* Player card */
     .player {
       display: flex;
       align-items: center;
       gap: 14px;
       width: 100%;
+      max-width: var(--container-max-w);
       padding: 12px 16px;
       border-radius: 12px;
       background: rgba(var(--card-bg-color), var(--card-bg-opacity));
@@ -231,7 +218,7 @@
       color: var(--muted-color);
     }
 
-    /* Shared seek & volume slider styles */
+    /* Seekbar & volume */
     .seek {
       position: relative;
       height: var(--track-height);
@@ -259,7 +246,6 @@
       cursor: pointer;
       z-index: 2;
     }
-    /* Invisible but draggable thumb */
     .seek input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: var(--thumb-size);
@@ -279,11 +265,23 @@
       background: transparent;
     }
 
+    /* Controls */
+    .time-volume-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+      gap: 16px;
+    }
     .time {
       min-width: 82px;
-      text-align: right;
       font-size: 13px;
       color: var(--muted-color);
+      text-align: right;
+      line-height: 1;
+      user-select: none;
+      /* aligned down with volume */
+      padding-top: 8px;
     }
 
     .volume {
@@ -343,21 +341,19 @@
       <div class="profile-card">
         <div class="profile-top">
           <div class="pfp-wrap"><img src="pfp.png" alt="@zc profile"></div>
-          <div>
-            <div class="name-and-badges">
-              <h1 class="display-name">@zc</h1>
-              <div class="badges">
-                <div class="badge" data-tooltip="Owner"><img src="owner.png" alt=""></div>
-                <div class="badge" data-tooltip="Developer"><img src="dev.png" alt=""></div>
-                <div class="badge" data-tooltip="Artist"><img src="artist.png" alt=""></div>
-                <div class="badge" data-tooltip="Premium"><img src="premium.png" alt=""></div>
-                <div class="badge" data-tooltip="Bug Hunter"><img src="bug.png" alt=""></div>
-                <div class="badge" data-tooltip="Verified"><img src="verified.png" alt=""></div>
-              </div>
+          <div class="name-and-badges">
+            <h1 class="display-name">kzcc</h1>
+            <div class="badges">
+              <div class="badge" data-tooltip="Owner"><img src="owner.png" alt=""></div>
+              <div class="badge" data-tooltip="Developer"><img src="dev.png" alt=""></div>
+              <div class="badge" data-tooltip="Artist"><img src="artist.png" alt=""></div>
+              <div class="badge" data-tooltip="Premium"><img src="premium.png" alt=""></div>
+              <div class="badge" data-tooltip="Bug Hunter"><img src="bug.png" alt=""></div>
+              <div class="badge" data-tooltip="Verified"><img src="verified.png" alt=""></div>
             </div>
-            <p class="bio">disc @flattener</p>
           </div>
         </div>
+        <p class="bio"><span id="typewriter"></span></p>
         <div class="socials">
           <a href="https://last.fm/user/crsttt" target="_blank" rel="noopener" class="social" data-tooltip="Last.fm"><img src="lastfm.png" alt=""></a>
           <a href="https://instagram.com/zccmu" target="_blank" rel="noopener" class="social" data-tooltip="Instagram"><img src="instagram.png" alt=""></a>
@@ -376,11 +372,11 @@
             <div class="song-title" id="song-title">Orb</div>
             <div class="song-artist" id="song-artist">Khan</div>
           </div>
-          <div class="seekbar">
-            <div class="seek">
-              <div class="progress" id="progress"></div>
-              <input id="seekRange" type="range" min="0" max="100" value="0" />
-            </div>
+          <div class="seek">
+            <div class="progress" id="progress"></div>
+            <input id="seekRange" type="range" min="0" max="100" value="0" />
+          </div>
+          <div class="time-volume-wrapper">
             <div class="time" id="timeDisplay">0:00 / 0:00</div>
             <div class="volume">
               <div class="seek">
@@ -390,7 +386,6 @@
             </div>
           </div>
         </div>
-        <audio id="audio" src="orb-khan.mp3" preload="metadata"></audio>
       </div>
     </div>
   </div>
@@ -461,15 +456,49 @@
     }
   });
 
-  audio.addEventListener('ended', () => {
-    playPauseBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-    seekRange.value = 0;
-    progress.style.width = '0%';
-    timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
-  });
+  // Typewriter effect switching between two bios continuously
+  const typewriterEl = document.getElementById('typewriter');
+  const bios = [
+    "@kzx. disc",
+    "#8.02 monsoons"
+  ];
 
-  audio.volume = vol.value;
-  volProgress.style.width = `${vol.value * 100}%`;
+  let currentBioIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  const typingSpeed = 100;
+  const pauseTime = 1500;
+
+  function type() {
+    const fullText = bios[currentBioIndex];
+    if (!isDeleting) {
+      typewriterEl.textContent = fullText.substring(0, charIndex + 1);
+      charIndex++;
+
+      if (charIndex === fullText.length) {
+        isDeleting = true;
+        setTimeout(type, pauseTime);
+      } else {
+        setTimeout(type, typingSpeed);
+      }
+    } else {
+      typewriterEl.textContent = fullText.substring(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        isDeleting = false;
+        currentBioIndex = (currentBioIndex + 1) % bios.length;
+        setTimeout(type, typingSpeed);
+      } else {
+        setTimeout(type, typingSpeed / 2);
+      }
+    }
+  }
+  type();
+
 </script>
+
+<!-- Add your audio source -->
+<audio id="audio" src="orb-khan.mp3"></audio>
+
 </body>
 </html>
