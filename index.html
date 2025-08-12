@@ -13,12 +13,13 @@
 
   <style>
     :root {
+      --bg-image-url: url('https://i.ytimg.com/vi/GBl5jISSTPE/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGFMgZShdMA8=&rs=AOn4CLBMegUGLRCPAO1pls0qzw1aQGpISw');
       --bg-color: #000;
-      --card-bg-opacity: 0.09;
-      --card-bg-color: 20,20,20;
+      --card-bg-opacity: 0.1;
+      --card-bg-color: 255,255,255;
       --card-border-color: 255,255,255;
       --card-border-width: 1.5px;
-      --card-border-opacity: 0.06;
+      --card-border-opacity: 0.3;
       --accent-color: #e9e9ff;
       --muted-color: rgba(255,255,255,0.5);
       --bio-color: rgba(255,255,255,0.65);
@@ -36,7 +37,11 @@
       padding: 0;
       height: 100%;
       font-family: 'Inter', system-ui;
-      background: var(--bg-color);
+      background-image: var(--bg-image-url);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: var(--bg-color); /* fallback */
       color: #fff;
       overflow: hidden; /* disables scrolling */
     }
