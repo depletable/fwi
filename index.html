@@ -30,7 +30,33 @@
       --pfp-size: 100px;
       --track-height: 8px;
       --thumb-size: 12px;
-    }
+      --overlay-blur: 8px;       /* blur strength */
+      --overlay-bg: rgba(0, 0, 0, 0.6); /* background color with opacity */
+      --overlay-text-color: white;
+      --overlay-text-size: 32px;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(var(--overlay-blur));
+  background-color: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.overlay-text {
+  color: var(--overlay-text-color);
+  font-size: var(--overlay-text-size);
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+}
 
     html, body {
       margin: 0;
@@ -358,63 +384,65 @@
   </style>
 </head>
 <body>
+<div id="overlay">
+  <div class="overlay-text">Click</div>  
   <div class="wrap">
-    <div class="profile-section">
-      <div class="profile-card">
-        <div class="profile-top">
-          <div class="pfp-wrap"><img src="https://images-ext-1.discordapp.net/external/MdgeyMMtHJ8LFy9aWmU9Bo5N9E96Iu3HVgXcJmsBjNw/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1264409681070395525/00d5cd060972e8a28443b3345a2409bd.png?format=webp&quality=lossless&width=1408&height=1408" alt="zc"></div>
-          <div>
-            <div class="name-and-badges">
-              <h1 class="display-name">kzcc</h1>
-              <div class="badges">
-                <div class="badge" data-tooltip="Owner"><img src="owner.png" alt=""></div>
-                <div class="badge" data-tooltip="Developer"><img src="dev.png" alt=""></div>
-                <div class="badge" data-tooltip="Artist"><img src="artist.png" alt=""></div>
-                <div class="badge" data-tooltip="Bug Hunter"><img src="bug.png" alt=""></div>
-                <div class="badge" data-tooltip="Verified"><img src="verified.png" alt=""></div>
+      <div class="profile-section">
+        <div class="profile-card">
+          <div class="profile-top">
+            <div class="pfp-wrap"><img src="https://images-ext-1.discordapp.net/external/MdgeyMMtHJ8LFy9aWmU9Bo5N9E96Iu3HVgXcJmsBjNw/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/1264409681070395525/00d5cd060972e8a28443b3345a2409bd.png?format=webp&quality=lossless&width=1408&height=1408" alt="zc"></div>
+            <div>
+              <div class="name-and-badges">
+                <h1 class="display-name">kzcc</h1>
+                <div class="badges">
+                  <div class="badge" data-tooltip="Owner"><img src="owner.png" alt=""></div>
+                  <div class="badge" data-tooltip="Developer"><img src="dev.png" alt=""></div>
+                  <div class="badge" data-tooltip="Artist"><img src="artist.png" alt=""></div>
+                  <div class="badge" data-tooltip="Bug Hunter"><img src="bug.png" alt=""></div>
+                  <div class="badge" data-tooltip="Verified"><img src="verified.png" alt=""></div>
+                </div>
               </div>
+              <p class="bio">#8.02 monsoons</p>
             </div>
-            <p class="bio">#8.02 monsoons</p>
+          </div>
+          <div class="socials">
+            <a href="https://last.fm/user/crsttt" target="_blank" rel="noopener" class="social" data-tooltip="Last.fm"><img src="lastfm.png" alt=""></a>
+            <a href="https://instagram.com/zccmu" target="_blank" rel="noopener" class="social" data-tooltip="Instagram"><img src="instagram.png" alt=""></a>
           </div>
         </div>
-        <div class="socials">
-          <a href="https://last.fm/user/crsttt" target="_blank" rel="noopener" class="social" data-tooltip="Last.fm"><img src="lastfm.png" alt=""></a>
-          <a href="https://instagram.com/zccmu" target="_blank" rel="noopener" class="social" data-tooltip="Instagram"><img src="instagram.png" alt=""></a>
-          <a href="https://discord.com/users/1359815625538797719" target="_blank" rel="noopener" class="social" data-tooltip="Discord"><img src=https://static.vecteezy.com/system/resources/thumbnails/065/386/541/small/discord-white-icon-logo-app-transparent-background-premium-social-media-design-for-digital-download-free-png.png" alt=""></a>
-        </div>
-      </div>
-      <div class="player">
-        <div class="album">
-          <img src="monsoons.png" id="album-art" alt="">
-        </div>
-        <div class="controls">
-          <button id="playPause"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-        </div>
-        <div class="player-meta">
-          <div>
-            <div class="song-title" id="song-title">Monsoons</div>
-            <div class="song-artist" id="song-artist">Khan</div>
+        <div class="player">
+          <div class="album">
+            <img src="monsoons.png" id="album-art" alt="">
           </div>
-          <div class="seekbar">
-            <div class="seek">
-              <div class="progress" id="progress"></div>
-              <input id="seekRange" type="range" min="0" max="100" value="0" />
+          <div class="controls">
+            <button id="playPause"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          </div>
+          <div class="player-meta">
+            <div>
+              <div class="song-title" id="song-title">Monsoons</div>
+              <div class="song-artist" id="song-artist">Khan</div>
             </div>
-            <div class="bottom-controls">
-              <div class="time" id="timeDisplay">0:00 / 0:00</div>
-              <div class="volume">
-                <div class="seek">
-                  <div class="progress" id="volProgress" style="width:80%;"></div>
-                  <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8" />
+            <div class="seekbar">
+              <div class="seek">
+                <div class="progress" id="progress"></div>
+                <input id="seekRange" type="range" min="0" max="100" value="0" />
+              </div>
+              <div class="bottom-controls">
+                <div class="time" id="timeDisplay">0:00 / 0:00</div>
+                <div class="volume">
+                  <div class="seek">
+                    <div class="progress" id="volProgress" style="width:80%;"></div>
+                    <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <audio id="audio" src="monsoons-khan.mp3" preload="metadata"></audio>
         </div>
-        <audio id="audio" src="monsoons-khan.mp3" preload="metadata"></audio>
       </div>
     </div>
-  </div>
+</div>
 
 <script>
   const audio = document.getElementById('audio');
@@ -492,5 +520,12 @@
   audio.volume = vol.value;
   volProgress.style.width = `${vol.value * 100}%`;
 </script>
+  
+  <script>
+  document.getElementById('overlay').addEventListener('click', function () {
+    this.style.display = 'none';
+  });
+</script>
+
 </body>
 </html>
