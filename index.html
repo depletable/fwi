@@ -19,7 +19,7 @@
       --card-bg-color: 0,0,0;
       --card-border-color: 255,255,255;
       --card-border-width: 1px;
-      --card-border-opacity: 0.2;
+      --card-border-opacity: 0.1;
       --accent-color: #e9e9ff;
       --muted-color: rgba(255,255,255,0.5);
       --bio-color: rgba(255,255,255,1);
@@ -112,8 +112,8 @@
       gap: 3px;
       padding: 4px 8px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: var(--card-bg-color);
+      border: var(--card-border-width) solid rgba(var(--card-border-color), var(--card-border-opacity));
       margin-top: 10px;
       margin-bottom: -5px;
     }
