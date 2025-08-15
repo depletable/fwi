@@ -13,17 +13,19 @@
 
   <style>
     :root {
-      --bg-image-url: url('https://upload.wikimedia.org/wikipedia/commons/7/71/Black.png');
+      --bg-image-url: url('https://images.unsplash.com/photo-1644348178246-b7cd2381cb19?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Ymx1cnJ5JTIwZmxvd2Vyc3xlbnwwfHwwfHx8MA%3D%3D');
       --bg-color: #000;
-      --card-bg-opacity: 0.2;
+      --card-bg-opacity: 0.0;
       --card-bg-color: 0,0,0;
       --card-border-color: 255,255,255;
       --card-border-width: 1.5px;
-      --card-border-opacity: 0.2;
+      --card-border-opacity: 0;
+      --badge-border-color: 255,255,255;
+      --badge-border-opacity: 0.2;
       --accent-color: #e9e9ff;
       --muted-color: rgba(255,255,255,0.5);
       --bio-color: rgba(255,255,255,1);
-      --glass-blur: 2px;
+      --glass-blur: 1px;
       --card-radius: 16px;
       --container-max-w: 650px;
       --profile-padding: 18px;
@@ -32,8 +34,6 @@
       --thumb-size: 12px;
       --overlay-blur: 10px;
       --overlay-opacity: 0.6;
-      --cursor-url: url('https://www.iconsdb.com/icons/preview/white/circle-xxl.png');
-      --cursor-size: 10px; /* size of the custom cursor */
     }
 
     html, body {
@@ -48,7 +48,6 @@
       background-color: var(--bg-color); /* fallback */
       color: #fff;
       overflow: hidden; /* disables scrolling */
-      cursor: none; /* hide the real mouse pointer */
     }
 
     .wrap {
@@ -118,7 +117,7 @@
       padding: 4px 8px;
       border-radius: 999px;
       background: var(--card-bg-color);
-      border: 1px solid rgba(var(--card-border-color), var(--card-border-opacity));
+      border: 1px solid rgba(var(--badge-border-color), var(--badge-border-opacity));
       margin-top: 10px;
       margin-bottom: -5px;
     }
@@ -151,18 +150,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    .custom-cursor {
-      position: fixed;
-      width: var(--cursor-size);
-      height: var(--cursor-size);
-      background-image: var(--cursor-url);
-      background-size: cover;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      z-index: 10000;
-      transform: translate(-50%, -50%);
-    }
-    
     .socials {
       display: flex;
       gap: 16px;
@@ -408,7 +395,6 @@
   </style>
 </head>
 <body>
-  <div class="custom-cursor"></div>
     <div class="overlay" id="overlay">
     <div class="overlay-text">kzx!</div>
     </div>
@@ -553,14 +539,5 @@ overlay.addEventListener('click', () => {
 });
   
 </script>
-
-  <script>
-  const cursor = document.querySelector('.custom-cursor');
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-  });
-</script>
-
 </body>
 </html>
