@@ -13,7 +13,7 @@
 
   <style>
     :root {
-      --bg-image-url: url('https://images.unsplash.com/photo-1644348178246-b7cd2381cb19?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Ymx1cnJ5JTIwZmxvd2Vyc3xlbnwwfHwwfHx8MA%3D%3D');
+      --bg-image-url: url('https://media.discordapp.net/attachments/1371800558519713933/1405855070976868513/photo-1644348178246-b7cd2381cb19.jpeg?ex=68a05810&is=689f0690&hm=c721edf0754d33d93c2693ea5d801a34d8a716102940e52d82b26109039ea09c&=&format=webp&width=557&height=696');
       --bg-color: #000;
       --card-bg-opacity: 0.0;
       --card-bg-color: 0,0,0;
@@ -21,8 +21,8 @@
       --card-border-width: 1.5px;
       --card-border-opacity: 0;
       --badge-border-color: 255,255,255;
-      --badge-border-opacity: 0.2;
-      --accent-color: #e9e9ff;
+      --badge-border-opacity: 0.9;
+      --accent-color: #fff;
       --muted-color: rgba(255,255,255,0.5);
       --bio-color: rgba(255,255,255,1);
       --glass-blur: 1px;
@@ -34,6 +34,7 @@
       --thumb-size: 12px;
       --overlay-blur: 10px;
       --overlay-opacity: 0.6;
+      --social-opacity: 1;
     }
 
     html, body {
@@ -165,7 +166,7 @@
     .social img {
       width: 32px;
       height: 32px;
-      opacity: 0.1;
+      opacity: var(--social-opacity);
     }
 
     .badge[data-tooltip]:hover::after,
