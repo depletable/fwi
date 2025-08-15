@@ -32,6 +32,8 @@
       --thumb-size: 12px;
       --overlay-blur: 10px;
       --overlay-opacity: 0.6;
+      --cursor-url: url('https://www.iconsdb.com/icons/preview/white/circle-xxl.png');
+      --cursor-size: 10px; /* size of the custom cursor */
     }
 
     html, body {
@@ -46,6 +48,7 @@
       background-color: var(--bg-color); /* fallback */
       color: #fff;
       overflow: hidden; /* disables scrolling */
+      cursor: none; /* hide the real mouse pointer */
     }
 
     .wrap {
@@ -148,6 +151,18 @@
       100% { background-position: 0% 50%; }
     }
 
+    .custom-cursor {
+      position: fixed;
+      width: var(--cursor-size);
+      height: var(--cursor-size);
+      background-image: var(--cursor-url);
+      background-size: cover;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 10000;
+      transform: translate(-50%, -50%);
+    }
+    
     .socials {
       display: flex;
       gap: 16px;
@@ -393,6 +408,7 @@
   </style>
 </head>
 <body>
+  <div class="custom-cursor"></div>
     <div class="overlay" id="overlay">
     <div class="overlay-text">kzx!</div>
     </div>
@@ -537,5 +553,14 @@ overlay.addEventListener('click', () => {
 });
   
 </script>
+
+  <script>
+  const cursor = document.querySelector('.custom-cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+</script>
+
 </body>
 </html>
